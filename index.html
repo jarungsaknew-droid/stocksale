@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -380,7 +380,11 @@
                     }
                     populateDropdown('thicknessInput', excelDataCache, 'ความหนา', true);
                     colorSelect.innerHTML = '<option value="">-- กรุณาเลือกความหนาก่อน --</option>';
-                    loader.textContent = `✅ โหลดข้อมูลสำเร็จ | ${updateTimestamp}`;
+                    
+                    // --- นี่คือจุดที่แก้ไขครับ ---
+                    loader.innerHTML = `✅ โหลดข้อมูลสำเร็จ | <span style="color: red;">${updateTimestamp}</span>`;
+                    // -------------------------
+
                     document.getElementById('form-wrapper').classList.remove('disabled');
                     document.getElementById('button-wrapper').classList.remove('disabled');
                 },

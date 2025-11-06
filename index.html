@@ -8,10 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
-        /* Import Font (optional) */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-        /* ตั้งค่าตัวแปรสีและค่าพื้นฐาน */
         :root {
             --primary-color: #007bff;
             --primary-hover: #0056b3;
@@ -22,9 +20,23 @@
             --border-color: #ddd;
             --text-color: #333;
             --label-color: #555;
-            --bg-color: #f9fafb;
-            --highlight-bg: #fffbe6; 
+            --highlight-bg: #fffbe6;
             --highlight-text: #72620a;
+        }
+
+        /* ------------------------- */
+        /* --- โลโก้ (ปรับตำแหน่งและขนาดใหม่) --- */
+        /* ------------------------- */
+        .logo {
+            position: fixed;
+            top: 20px;    /* ระยะห่างจากด้านบน */
+            right: 20px;  /* **ใหม่: ย้ายไป 20px จากขอบขวา** */
+            left: auto;   /* **ใหม่: ลบการจัดตำแหน่งจากด้านซ้ายออก** */
+            width: 100px; /* **ใหม่: ขนาดของโลโก้ใหญ่ขึ้น** */
+            height: auto;
+            z-index: 100;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
         }
 
         /* ------------------------- */
@@ -32,106 +44,158 @@
         /* ------------------------- */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color);
-            margin: 0; padding: 2rem; min-height: 100vh; box-sizing: border-box;
+            
+            background: linear-gradient(110deg, #3d317e 0%, #4a75e3 60%, #59a6ff 100%);
+            background-image: 
+                url('https://img2.pic.in.th/pic/Pngtreeglass-broken-effect-decoration_5447210.png'),
+                linear-gradient(110deg, #3d317e 0%, #4a75e3 60%, #59a6ff 100%);
+            
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
+            background-blend-mode: soft-light;
+
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .layout-container {
-            display: grid; grid-template-columns: 1fr 1fr; 
-            gap: 2rem; max-width: 1100px; width: 100%; margin: 0 auto; 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
         }
 
         .card {
-            background-color: #ffffff; border-radius: 8px; padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .output-column { height: fit-content; position: sticky; top: 2rem; }
-        h2 { text-align: center; margin-top: 0; color: var(--text-color); }
-        hr { border: none; border-top: 1px solid #eee; margin: 20px 0; }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2);
+        }
 
-        /* ------------------------- */
-        /* --- Form Elements --- */
-        /* ------------------------- */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--label-color); }
+        .output-column {
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #333; 
+            text-shadow: none;
+        }
         
+        .form-group label {
+             color: #555;
+             font-weight: 600;
+             text-shadow: none;
+        }
+
+
+        hr {
+            border: none;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .form-group { margin-bottom: 15px; }
         .loader {
-            padding: 12px; border: 2px dashed var(--border-color); border-radius: 5px;
-            color: var(--label-color); text-align: center; font-weight: 500;
-            /* ทำให้ตัดคำถ้าข้อมความยาวเกิน */
+            padding: 12px;
+            border: 2px dashed rgba(0,0,0,0.2);
+            border-radius: 5px;
+            color: var(--label-color);
+            text-align: center;
+            font-weight: 500;
             word-wrap: break-word;
+            background: rgba(255,255,255,0.8);
         }
         .loader.error { border-color: var(--error-border); color: var(--error-border); background-color: var(--error-bg); }
-
         .form-control {
-            width: 100%; padding: 10px 12px; border: 1px solid var(--border-color);
-            border-radius: 5px; box-sizing: border-box; font-size: 1em;
-            background-color: #fff; -webkit-appearance: none; -moz-appearance: none; appearance: none; 
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: #fff;
+            color: #333;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
         select.form-control {
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat; background-position: right 12px center; background-size: 10px;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%233d317e%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 10px;
         }
-        
-        select.form-control:disabled {
-            background-color: #f4f4f4;
-            color: #999;
-        }
-
+        select.form-control:disabled { background-color: #f4f4f4; color: #999; opacity: 0.7; }
         input[type="text"].form-control:focus,
         select.form-control:focus {
-            outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 117, 227, 0.5);
         }
-        .form-group.disabled, .button-group.disabled { opacity: 0.5; pointer-events: none; }
-        
-        /* ------------------------- */
-        /* --- Buttons --- */
-        /* ------------------------- */
+        .form-group.disabled,
+        .button-group.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
         .button-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
         button {
-            width: 100%; padding: 12px; font-size: 1em; font-weight: 600;
-            border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s;
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-        
-        /* ------------------------- */
-        /* --- Result Box --- */
-        /* ------------------------- */
-        #result { 
-            margin-top: 0; font-size: 1em; font-weight: 500; padding: 0; 
-            border-radius: 5px; line-height: 1.6; color: var(--label-color); 
-            max-height: 70vh; overflow-y: auto; 
-        }
-
-        #result.success, #result.error {
-            padding: 12px 15px;
-            white-space: pre-wrap; 
-        }
-        #result.success {
-            color: #155724; 
-            background-color: var(--success-bg);
-            border-left: 4px solid var(--success-border);
-        }
-        #result.error {
-            color: #721c24; 
-            background-color: var(--error-bg);
-            border-left: 4px solid var(--error-border);
-        }
-        #result.html-result {
-            padding: 0; 
+        .btn-primary { background-color: #4a75e3; color: white; }
+        .btn-primary:hover { background-color: #375bb2; } 
+        #result {
+            margin-top: 0;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 0;
+            border-radius: 5px;
+            line-height: 1.6;
             color: var(--text-color);
+            max-height: 70vh;
+            overflow-y: auto;
         }
-        
-        /* --------------------------------- */
-        /* --- CSS สำหรับตารางผลลัพธ์ --- */
-        /* --------------------------------- */
+        #result.success, #result.error { padding: 12px 15px; white-space: pre-wrap; }
+        #result.success { color: #155724; background-color: var(--success-bg); border-left: 4px solid var(--success-border); }
+        #result.error { color: #721c24; background-color: var(--error-bg); border-left: 4px solid var(--error-border); }
+        #result.html-result { padding: 0; color: #333; }
         .result-header {
-            font-weight: 600; padding: 10px 15px; background-color: var(--success-bg);
-            color: #155724; border-left: 4px solid var(--success-border);
-            border-radius: 5px 5px 0 0; position: sticky; top: 0; z-index: 10;
+            font-weight: 600;
+            padding: 10px 15px;
+            background-color: var(--success-bg);
+            color: #155724;
+            border-left: 4px solid var(--success-border);
+            border-radius: 5px 5px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .result-header span { float: right; font-weight: 500; font-size: 0.9em; color: var(--label-color); }
         .result-table { width: 100%; border-collapse: collapse; }
@@ -141,19 +205,25 @@
         .result-table tr:last-child td { border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
         .result-table tr:last-child td:first-child { border-bottom-left-radius: 5px; }
         .result-table tr:last-child td:last-child { border-bottom-right-radius: 5px; }
-        .result-table tr.highlight-row td { background-color: var(--highlight-bg); color: var(--highlight-text); font-weight: 600; }
-
-        .clickable-cell { cursor: pointer; }
-        .clickable-cell:hover {
-            color: var(--primary-color); 
-            text-decoration: underline;  
+        .result-table tr.highlight-row td {
+            background-color: var(--highlight-bg);
+            color: var(--highlight-text);
+            font-weight: 600;
+            position: relative;
         }
-
-        /* ------------------------- */
-        /* --- CSS สำหรับ Modal (Pop-up) --- */
-        /* ------------------------- */
+        .result-table tr.highlight-row td::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M5 20 L20 5 L25 30 L5 20 M80 5 L95 20 L70 25 L80 5 M5 80 L20 95 L25 70 L5 80 M80 95 L95 80 L70 75 L80 95 M20 20 L80 80 M80 20 L20 80" stroke-width="0.5" stroke="%2372620a" fill="none" opacity="0.1"/></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+        }
+        .clickable-cell { cursor: pointer; }
+        .clickable-cell:hover { color: #4a75e3; text-decoration: underline; }
         .modal-backdrop {
-            display: none; 
+            display: none;
             position: fixed;
             z-index: 998;
             top: 0; left: 0;
@@ -173,33 +243,25 @@
             margin-top: 0; margin-bottom: 1rem;
             border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;
         }
-        #modalLocationData {
-            font-size: 1.1rem; color: var(--label-color);
-            white-space: pre-wrap; 
-        }
+        #modalLocationData { font-size: 1.1rem; color: var(--label-color); white-space: pre-wrap; }
         .modal-close-btn {
             position: absolute; top: 1rem; right: 1rem;
             font-size: 1.5rem; font-weight: bold; color: #aaa;
             cursor: pointer; line-height: 1;
         }
         .modal-close-btn:hover { color: #333; }
-        .modal-backdrop.active {
-            display: flex;
-        }
-        
-        /* ------------------------- */
-        /* --- Media Query --- */
-        /* ------------------------- */
+        .modal-backdrop.active { display: flex; }
         @media (max-width: 900px) {
             .layout-container { grid-template-columns: 1fr; gap: 1.5rem; }
             .output-column { position: static; top: auto; }
             body { padding: 1rem; }
-            .card { padding: 1.5rem; }
+            .card { padding: 1.5rem; border-radius: 12px; }
             #result { max-height: 50vh; }
         }
     </style>
 </head>
 <body>
+    <img src="https://img2.pic.in.th/pic/images-removebg-preview6f60794d15581bfe.png" alt="Company Logo" class="logo">
 
     <div class="layout-container">
         
@@ -230,7 +292,7 @@
             
             <div class="button-group disabled" id="button-wrapper">
                 <button onclick="findAllMatches()" class="btn-primary">
-                    ค้นหา ( ความหนา + สี )
+                    ค้นหา
                 </button>
             </div>
         </div>
@@ -240,7 +302,9 @@
             <div id="result">ผลลัพธ์การค้นหาจะแสดงที่นี่...</div>
         </div>
 
-    </div> <div id="locationModal" class="modal-backdrop" onclick="closeLocationPopup()">
+    </div>
+
+    <div id="locationModal" class="modal-backdrop" onclick="closeLocationPopup()">
         <div class="modal-content" onclick="event.stopPropagation()"> 
             <span class="modal-close-btn" onclick="closeLocationPopup()">&times;</span>
             <h3 class="modal-header">ตำแหน่ง</h3>
@@ -250,7 +314,6 @@
 
 
     <script>
-
         // --- !! 1. ตั้งค่า !! ---
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMdBbCfyGwd4W-gIBCrS5FcDjyBO4VugS-vWcYWZbbj02E3g2tLlgUGsv7aWZnZN5Q/exec'; 
 
@@ -272,14 +335,12 @@
                     valueSet.add(value);
                 }
             }
-
             let sortedValues = [...valueSet];
             if (sortNumerically) {
                 sortedValues.sort((a, b) => parseFloat(a) - parseFloat(b));
             } else {
                 sortedValues.sort((a, b) => a.localeCompare(b));
             }
-
             selectElement.innerHTML = `<option value="">-- กรุณาเลือก${columnName} --</option>`;
             for (const value of sortedValues) {
                 const option = document.createElement('option');
@@ -289,7 +350,7 @@
             }
         }
 
-        // ---!! 5. ฟังก์ชันโหลดข้อมูล (อัปเดตตรงนี้) !! ---
+        // ---!! 5. ฟังก์ชันโหลดข้อมูล !! ---
         function loadDataFromGoogleSheet() {
             const loader = document.getElementById('loader-status');
             const colorSelect = document.getElementById('colorInput');
@@ -312,27 +373,14 @@
                 timeout: 20000, 
                 complete: function(results) {
                     excelDataCache = results.data;
-
-                    // ---!! (ใหม่) ดึงข้อมูล "Update" !! ---
-                    // !! แก้ไขชื่อคอลัมน์ 'Update' ตรงนี้ถ้าไม่ตรง !!
                     const update_col = 'Update'; 
                     let updateTimestamp = 'N/A';
-                    
                     if (excelDataCache && excelDataCache.length > 0) {
-                        // ดึงค่าจากแถวแรกของข้อมูล
                         updateTimestamp = excelDataCache[0][update_col] || 'ไม่มีข้อมูล';
                     }
-                    // ---------------------------------
-
-                    // สร้าง Dropdown "ความหนา"
                     populateDropdown('thicknessInput', excelDataCache, 'ความหนา', true);
-                    
-                    // ตั้งค่า "สี" ให้รอเลือก
                     colorSelect.innerHTML = '<option value="">-- กรุณาเลือกความหนาก่อน --</option>';
-                    
-                    // ---!! (ใหม่) อัปเดตข้อความ Loader !! ---
-                    loader.textContent = `✅ โหลดข้อมูลสำเร็จ Update ${updateTimestamp}`;
-                    
+                    loader.textContent = `✅ โหลดข้อมูลสำเร็จ | ${updateTimestamp}`;
                     document.getElementById('form-wrapper').classList.remove('disabled');
                     document.getElementById('button-wrapper').classList.remove('disabled');
                 },
@@ -344,7 +392,7 @@
             });
         }
 
-        // ---!! 6. ฟังก์ชันอัปเดตตัวเลือกสี (เมื่อเลือกความหนา) !! ---
+        // ---!! 6. ฟังก์ชันอัปเดตตัวเลือกสี !! ---
         function updateColorOptions() {
             const selectedThickness = document.getElementById('thicknessInput').value;
             const colorSelect = document.getElementById('colorInput');
@@ -359,16 +407,13 @@
                 return;
             }
             const thickness_col = 'ความหนา';
-            const color_col = 'สี';
             const filteredData = excelDataCache.filter(row => {
                 return String(row[thickness_col] || '').trim() === selectedThickness;
             });
             populateDropdown('colorInput', filteredData, 'สี', false);
             colorSelect.disabled = false;
         }
-
         
-        // --- ฟังก์ชันแสดงผล (เหมือนเดิม) ---
         function showResultText(type, message) {
             const resultDiv = document.getElementById('result');
             resultDiv.className = type; 
@@ -382,20 +427,18 @@
             resultDiv.style.display = 'block';
         }
 
-        // --- ฟังก์ชันอ่านไฟล์จาก Cache (เหมือนเดิม) ---
         function getFileData() {
             return new Promise((resolve, reject) => {
                 if (excelDataCache && excelDataCache.length > 0) {
                     resolve(excelDataCache); 
                 } else if (excelDataCache) {
-                     reject('ข้อมูลใน Cache ว่างเปล่า หรือโหลดไม่สำเร็จ');
+                        reject('ข้อมูลใน Cache ว่างเปล่า หรือโหลดไม่สำเร็จ');
                 } else {
                     reject('ยังไม่ได้โหลดข้อมูล หรือกำลังรอข้อมูลจาก Google Sheet');
                 }
             });
         }
         
-        // --- ฟังก์ชันคำนวณพื้นที่ (เหมือนเดิม) ---
         function getArea(sizeString) {
             try {
                 const parts = String(sizeString || '').trim().split('x');
@@ -406,7 +449,6 @@
             } catch (e) { return 0; }
         }
 
-        // --- ฟังก์ชันดึงเลขหน้า (เหมือนเดิม) ---
         function getWidth(sizeString) {
              try {
                 const parts = String(sizeString || '').trim().split('x');
@@ -416,7 +458,6 @@
             } catch (e) { return 0; }
         }
 
-        // --- ฟังก์ชันสำหรับจัดการ Modal (เหมือนเดิม) ---
         function showLocationPopup(cellElement) {
             const locationData = cellElement.getAttribute('data-location');
             document.getElementById('modalLocationData').textContent = locationData;
@@ -427,13 +468,10 @@
             document.getElementById('locationModal').classList.remove('active');
         }
 
-        // --- ฟังก์ชันช่วย Escape ค่า HTML (เหมือนเดิม) ---
         function escapeHTML(str) {
              return String(str || '').replace(/"/g, '&quot;');
         }
 
-
-        // --- ฟังก์ชันค้นหาหลัก (findAllMatches) (เหมือนเดิม) ---
         async function findAllMatches() {
             const color = document.getElementById('colorInput').value.toLowerCase();
             const thickness = document.getElementById('thicknessInput').value.toLowerCase(); 
@@ -523,7 +561,6 @@
                 showResultText('error', errorMsg);
             }
         }
-
     </script>
 
 </body>

@@ -1,571 +1,402 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock</title>
+    <title>Stock V1.2.2</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap');
 
         :root {
-            --primary-color: #007bff;
-            --primary-hover: #0056b3;
-            --success-bg: #e9f7ef;
-            --success-border: #28a745;
-            --error-bg: #fdf2f2;
-            --error-border: #dc3545;
-            --border-color: #ddd;
-            --text-color: #333;
-            --label-color: #555;
-            --highlight-bg: #fffbe6;
-            --highlight-text: #72620a;
+            --primary: #2563eb;       
+            --primary-dark: #1e40af;
+            --secondary: #64748b;     
+            --bg-body: #f8fafc;       
+            --bg-card: #ffffff;       
+            --text-main: #0f172a;     
+            --text-muted: #64748b;    
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --error-bg: #fee2e2;
+            --error-text: #ef4444; /* ปรับสีแดงให้สดขึ้น */
+            --highlight-bg: #fef9c3;  
+            --highlight-border: #eab308;
+            --radius: 16px;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
         }
 
-        /* ------------------------- */
-        /* --- โลโก้ (ปรับตำแหน่งและขนาดใหม่) --- */
-        /* ------------------------- */
-        .logo {
-            position: fixed;
-            top: 20px;    /* ระยะห่างจากด้านบน */
-            right: 20px;  /* **ใหม่: ย้ายไป 20px จากขอบขวา** */
-            left: auto;   /* **ใหม่: ลบการจัดตำแหน่งจากด้านซ้ายออก** */
-            width: 100px; /* **ใหม่: ขนาดของโลโก้ใหญ่ขึ้น** */
-            height: auto;
-            z-index: 100;
-            opacity: 0.9;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
-        }
-
-        /* ------------------------- */
-        /* --- Layout & Card --- */
-        /* ------------------------- */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            
-            background: linear-gradient(110deg, #3d317e 0%, #4a75e3 60%, #59a6ff 100%);
-            background-image: 
-                url('https://img2.pic.in.th/pic/Pngtreeglass-broken-effect-decoration_5447210.png'),
-                linear-gradient(110deg, #3d317e 0%, #4a75e3 60%, #59a6ff 100%);
-            
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            
-            background-blend-mode: soft-light;
-
-            color: var(--text-color);
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             margin: 0;
-            padding: 2rem;
-            min-height: 100vh;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
             box-sizing: border-box;
+        }
+
+        .logo {
+            position: fixed; top: 20px; right: 20px;
+            width: 90px; height: auto; z-index: 1000;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .version-tag {
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+            z-index: 500;
+            pointer-events: none;
+            font-weight: 500;
         }
 
         .layout-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
             max-width: 1100px;
-            width: 100%;
-            margin: 0 auto;
+            margin: 60px auto 0;
+            align-items: start;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .output-column {
-            height: fit-content;
-            position: sticky;
-            top: 2rem;
-        }
-
-        h2 {
-            text-align: center;
-            margin-top: 0;
-            color: #333; 
-            text-shadow: none;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
-        .form-group label {
-             color: #555;
-             font-weight: 600;
-             text-shadow: none;
-        }
-
-
-        hr {
-            border: none;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
+        .card h2 {
+            margin-top: 0; color: var(--primary); font-weight: 600; font-size: 1.5rem; margin-bottom: 20px;
         }
 
         .form-group { margin-bottom: 15px; }
-        .loader {
-            padding: 12px;
-            border: 2px dashed rgba(0,0,0,0.2);
-            border-radius: 5px;
-            color: var(--label-color);
-            text-align: center;
-            font-weight: 500;
-            word-wrap: break-word;
-            background: rgba(255,255,255,0.8);
-        }
-        .loader.error { border-color: var(--error-border); color: var(--error-border); background-color: var(--error-bg); }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-main); font-weight: 500; }
         .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1em;
-            background-color: #fff;
-            color: #333;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px;
+            font-size: 1rem; color: var(--text-main); background-color: #f8fafc;
+            box-sizing: border-box; font-family: inherit;
         }
-        select.form-control {
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%233d317e%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 10px;
+        .form-control:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+        .form-control:disabled { background-color: #f1f5f9; color: #94a3b8; }
+
+        .button-group { margin-top: 25px; }
+        button { border: none; border-radius: 10px; padding: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-primary { width: 100%; background: var(--primary); color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        .loader {
+            padding: 10px; border-radius: 12px; background: #f1f5f9; color: var(--secondary);
+            font-size: 0.9rem; text-align: center; margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
         }
-        select.form-control:disabled { background-color: #f4f4f4; color: #999; opacity: 0.7; }
-        input[type="text"].form-control:focus,
-        select.form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(74, 117, 227, 0.5);
-        }
-        .form-group.disabled,
-        .button-group.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .button-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
-        button {
-            width: 100%;
-            padding: 12px;
-            font-size: 1em;
-            font-weight: 600;
-            border: none;
-            border-radius: 5px;
+        .loader.success { background: var(--success-bg); color: var(--success-text); border: 1px solid #bbf7d0; }
+        .loader.error { background: var(--error-bg); color: var(--error-text); border: 1px solid #fecaca; }
+
+        .btn-refresh-modern {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .btn-primary { background-color: #4a75e3; color: white; }
-        .btn-primary:hover { background-color: #375bb2; } 
-        #result {
-            margin-top: 0;
-            font-size: 1em;
-            font-weight: 500;
-            padding: 0;
-            border-radius: 5px;
-            line-height: 1.6;
-            color: var(--text-color);
-            max-height: 70vh;
-            overflow-y: auto;
+        .btn-refresh-modern:hover {
+            transform: rotate(180deg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            color: var(--primary-dark);
+            background: #fff;
         }
-        #result.success, #result.error { padding: 12px 15px; white-space: pre-wrap; }
-        #result.success { color: #155724; background-color: var(--success-bg); border-left: 4px solid var(--success-border); }
-        #result.error { color: #721c24; background-color: var(--error-bg); border-left: 4px solid var(--error-border); }
-        #result.html-result { padding: 0; color: #333; }
-        .result-header {
-            font-weight: 600;
-            padding: 10px 15px;
-            background-color: var(--success-bg);
-            color: #155724;
-            border-left: 4px solid var(--success-border);
-            border-radius: 5px 5px 0 0;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+        .btn-refresh-modern:active { transform: scale(0.95); }
+        .refresh-icon-svg { width: 20px; height: 20px; fill: currentColor; }
+
+        #result-container {
+            display: flex; flex-direction: column;
+            height: 60vh; 
+            overflow: hidden; 
+            border: 1px solid #e2e8f0; border-radius: 10px;
         }
-        .result-header span { float: right; font-weight: 500; font-size: 0.9em; color: var(--label-color); }
-        .result-table { width: 100%; border-collapse: collapse; }
-        .result-table th, .result-table td { padding: 10px 15px; border: 1px solid var(--border-color); text-align: left; }
-        .result-table th { background-color: #f8f9fa; font-weight: 600; position: sticky; top: 45px; z-index: 9; }
-        .result-table tr:nth-child(even) td { background-color: #fdfdfd; }
-        .result-table tr:last-child td { border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-        .result-table tr:last-child td:first-child { border-bottom-left-radius: 5px; }
-        .result-table tr:last-child td:last-child { border-bottom-right-radius: 5px; }
-        .result-table tr.highlight-row td {
-            background-color: var(--highlight-bg);
-            color: var(--highlight-text);
-            font-weight: 600;
-            position: relative;
+
+        .summary-header {
+            background: #eff6ff; color: var(--primary);
+            padding: 15px; font-weight: 600;
+            border-bottom: 1px solid #dbeafe;
+            display: flex; justify-content: space-between; flex-shrink: 0;
         }
-        .result-table tr.highlight-row td::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M5 20 L20 5 L25 30 L5 20 M80 5 L95 20 L70 25 L80 5 M5 80 L20 95 L25 70 L5 80 M80 95 L95 80 L70 75 L80 95 M20 20 L80 80 M80 20 L20 80" stroke-width="0.5" stroke="%2372620a" fill="none" opacity="0.1"/></svg>');
-            background-repeat: repeat;
-            pointer-events: none;
+
+        .table-header {
+            display: flex; background: white; border-bottom: 2px solid #e2e8f0;
+            padding: 10px 0; font-weight: 600; color: var(--text-muted);
+            flex-shrink: 0; padding-right: 6px; 
         }
-        .clickable-cell { cursor: pointer; }
-        .clickable-cell:hover { color: #4a75e3; text-decoration: underline; }
+
+        .table-body {
+            flex: 1; overflow-y: auto; overflow-x: hidden; background: white;
+        }
+        .table-body::-webkit-scrollbar { width: 6px; }
+        .table-body::-webkit-scrollbar-track { background: #f1f5f9; }
+        .table-body::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+
+        .flex-row { display: flex; padding: 12px 0; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        .flex-col { padding: 0 15px; flex: 1; }
+        .flex-col.right { text-align: right; }
+
+        .highlight-row { background-color: var(--highlight-bg); }
+        .highlight-row .flex-col:first-child { border-left: 4px solid var(--highlight-border); padding-left: 11px; }
+
+        .clickable-cell {
+            cursor: pointer; color: var(--primary); font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end;
+        }
+        .clickable-cell:hover { text-decoration: underline; }
+
         .modal-backdrop {
-            display: none;
-            position: fixed;
-            z-index: 998;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 1001;
+            align-items: center; justify-content: center;
         }
-        .modal-content {
-            background: white; padding: 2rem; border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 90%; max-width: 400px; position: relative;
-        }
-        .modal-header {
-            font-size: 1.25rem; font-weight: 600; color: var(--text-color);
-            margin-top: 0; margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;
-        }
-        #modalLocationData { font-size: 1.1rem; color: var(--label-color); white-space: pre-wrap; }
-        .modal-close-btn {
-            position: absolute; top: 1rem; right: 1rem;
-            font-size: 1.5rem; font-weight: bold; color: #aaa;
-            cursor: pointer; line-height: 1;
-        }
-        .modal-close-btn:hover { color: #333; }
         .modal-backdrop.active { display: flex; }
-        @media (max-width: 900px) {
-            .layout-container { grid-template-columns: 1fr; gap: 1.5rem; }
-            .output-column { position: static; top: auto; }
-            body { padding: 1rem; }
-            .card { padding: 1.5rem; border-radius: 12px; }
-            #result { max-height: 50vh; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 20px;
+            width: 90%; max-width: 350px; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative;
+        }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #cbd5e1; }
+
+        .disabled { opacity: 0.6; pointer-events: none; }
+
+        @media (max-width: 768px) {
+            body { height: auto; overflow: auto; padding: 10px; }
+            .layout-container { display: block; margin-top: 50px; }
+            .card { margin-bottom: 20px; }
+            .logo { width: 70px; top: 10px; right: 10px; }
+            #result-container { height: 50vh; } 
+            .version-tag { display: none; }
         }
     </style>
 </head>
 <body>
+
     <img src="https://img2.pic.in.th/pic/images-removebg-preview6f60794d15581bfe.png" alt="Company Logo" class="logo">
+
+    <div class="version-tag">v1.0</div>
 
     <div class="layout-container">
         
-        <div class="input-column card">
-            <h2>ค้นหา Stock</h2>
-        
-            <div class="loader" id="loader-status">
-                กำลังเชื่อมต่อฐานข้อมูล...
-            </div>
+        <div class="card">
+            <h2>🔎 ค้นหากระจก</h2>
             
-            <hr>
+            <div id="loader-status" class="loader">
+                Connecting...
+            </div>
 
-            <div class="form-group-wrapper disabled" id="form-wrapper">
+            <div id="form-wrapper" class="disabled">
                 <div class="form-group">
-                    <label for="thicknessInput">ความหนา :</label>
+                    <label>ความหนา</label>
                     <select id="thicknessInput" class="form-control" onchange="updateColorOptions()">
-                        <option value="">-- รอข้อมูลจาก Google Sheet --</option>
+                        <option value="">-- รอข้อมูล --</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="colorInput">สี :</label>
+                    <label>สี</label>
                     <select id="colorInput" class="form-control" disabled>
-                        <option value="">-- กรุณาเลือกความหนาก่อน --</option>
+                        <option value="">-- เลือกความหนาก่อน --</option>
                     </select>
                 </div>
+
+                <div class="button-group">
+                    <button onclick="findAllMatches()" class="btn-primary">
+                        ค้นหา
+                    </button>
+                </div>
             </div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 15px;">📦 รายการกระจก</h2>
             
-            <div class="button-group disabled" id="button-wrapper">
-                <button onclick="findAllMatches()" class="btn-primary">
-                    ค้นหา
-                </button>
+            <div id="result-container">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted);">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="60" style="opacity: 0.3; margin-bottom: 15px;">
+                    <div>กรุณาเลือกข้อมูลเพื่อค้นหา</div>
+                </div>
             </div>
         </div>
-        
-        <div class="output-column card">
-            <h2>แสดงผล</h2>
-            <div id="result">ผลลัพธ์การค้นหาจะแสดงที่นี่...</div>
-        </div>
-
     </div>
 
-    <div id="locationModal" class="modal-backdrop" onclick="closeLocationPopup()">
-        <div class="modal-content" onclick="event.stopPropagation()"> 
-            <span class="modal-close-btn" onclick="closeLocationPopup()">&times;</span>
-            <h3 class="modal-header">ตำแหน่ง</h3>
-            <p id="modalLocationData">กำลังโหลด...</p>
+    <div id="locationModal" class="modal-backdrop" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h3 style="margin-top: 0; color: var(--text-muted);">📍 ตำแหน่งเก็บ</h3>
+            <div id="modalLocationData" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 20px 0;">
+                Loading...
+            </div>
         </div>
     </div>
-
 
     <script>
-        // --- !! 1. ตั้งค่า !! ---
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMdBbCfyGwd4W-gIBCrS5FcDjyBO4VugS-vWcYWZbbj02E3g2tLlgUGsv7aWZnZN5Q/exec'; 
 
-        // ---!! 2. Global Cache !! ---
+        const REFRESH_ICON_SVG = `<svg class="refresh-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.9381 13C19.979 12.6724 20 12.3387 20 12C20 7.58172 16.4183 4 12 4C9.49942 4 7.26681 5.14727 5.7998 6.94416M5.7998 6.94416V4M5.7998 6.94416H8.96917M4.06189 11C4.02104 11.3276 4 11.6613 4 12C4 16.4183 7.58172 20 12 20C14.3894 20 16.5341 18.9525 18 17.2916M18 17.2916V20M18 17.2916H14.8308" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
         let excelDataCache = null;
+        window.onload = loadData;
 
-        // ---!! 3. ฟังก์ชันโหลดข้อมูลหลัก (ทำงานเมื่อเปิดหน้า) !! ---
-        window.onload = function() {
-            loadDataFromGoogleSheet();
-        };
-        
-        // ---!! 4. ฟังก์ชันสำหรับสร้าง Dropdown !! ---
-        function populateDropdown(elementId, dataCache, columnName, sortNumerically = false) {
-            const selectElement = document.getElementById(elementId);
-            const valueSet = new Set();
-            for (const row of dataCache) {
-                const value = String(row[columnName] || '').trim();
-                if (value) {
-                    valueSet.add(value);
-                }
-            }
-            let sortedValues = [...valueSet];
-            if (sortNumerically) {
-                sortedValues.sort((a, b) => parseFloat(a) - parseFloat(b));
-            } else {
-                sortedValues.sort((a, b) => a.localeCompare(b));
-            }
-            selectElement.innerHTML = `<option value="">-- กรุณาเลือก${columnName} --</option>`;
-            for (const value of sortedValues) {
-                const option = document.createElement('option');
-                option.value = value;
-                option.textContent = value;
-                selectElement.add(option);
-            }
-        }
-
-        // ---!! 5. ฟังก์ชันโหลดข้อมูล !! ---
-        function loadDataFromGoogleSheet() {
+        function loadData() {
             const loader = document.getElementById('loader-status');
-            const colorSelect = document.getElementById('colorInput');
-            const thicknessSelect = document.getElementById('thicknessInput');
+            const wrapper = document.getElementById('form-wrapper');
+            loader.className = 'loader';
+            loader.innerHTML = '<div class="spinner"></div> ☁️ กำลังโหลดข้อมูล...';
+            wrapper.classList.add('disabled');
 
-            colorSelect.innerHTML = '<option value="">...กำลังอ่านไฟล์...</option>';
-            thicknessSelect.innerHTML = '<option value="">...กำลังอ่านไฟล์...</option>';
-            colorSelect.disabled = true; 
-
-            if (!GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL.includes('YOUR_NEW_APPS_SCRIPT')) {
-                loader.textContent = '🚫 ยังไม่ได้ตั้งค่า URL (ใน JavaScript)';
-                loader.classList.add('error');
-                return;
-            }
-            
             Papa.parse(GOOGLE_APPS_SCRIPT_URL, {
-                download: true, 
-                header: true,   
-                skipEmptyLines: true,
-                timeout: 20000, 
+                download: true, header: true, skipEmptyLines: true,
                 complete: function(results) {
                     excelDataCache = results.data;
-                    const update_col = 'Update'; 
-                    let updateTimestamp = 'N/A';
-                    if (excelDataCache && excelDataCache.length > 0) {
-                        updateTimestamp = excelDataCache[0][update_col] || 'ไม่มีข้อมูล';
-                    }
+                    const updateTime = (excelDataCache.length > 0 && excelDataCache[0]['Update']) ? excelDataCache[0]['Update'] : '-';
                     populateDropdown('thicknessInput', excelDataCache, 'ความหนา', true);
-                    colorSelect.innerHTML = '<option value="">-- กรุณาเลือกความหนาก่อน --</option>';
+                    document.getElementById('colorInput').innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>';
+                    document.getElementById('colorInput').disabled = true;
+                    loader.className = 'loader success';
                     
-                    // --- นี่คือจุดที่แก้ไขครับ ---
-                    loader.innerHTML = `✅ โหลดข้อมูลสำเร็จ | <span style="color: red;">${updateTimestamp}</span>`;
-                    // -------------------------
-
-                    document.getElementById('form-wrapper').classList.remove('disabled');
-                    document.getElementById('button-wrapper').classList.remove('disabled');
+                    loader.innerHTML = `
+                        <span>✅ ข้อมูลล่าสุด: <b>${updateTime}</b></span>
+                        <button onclick="reloadData()" class="btn-refresh-modern" title="อัปเดตข้อมูล">
+                            ${REFRESH_ICON_SVG}
+                        </button>
+                    `;
+                    
+                    wrapper.classList.remove('disabled');
                 },
                 error: function(err) {
-                    loader.textContent = `🚫 โหลดข้อมูลล้มเหลว: ${err.message}`;
-                    loader.classList.add('error');
-                    excelDataCache = null;
+                    loader.className = 'loader error';
+                    loader.innerHTML = `โหลดไม่สำเร็จ <button onclick="reloadData()" class="btn-refresh-modern">${REFRESH_ICON_SVG}</button>`;
                 }
             });
         }
 
-        // ---!! 6. ฟังก์ชันอัปเดตตัวเลือกสี !! ---
+        function reloadData() {
+            const btn = document.querySelector('.btn-refresh-modern');
+            if(btn) btn.style.transform = 'rotate(360deg)'; 
+            excelDataCache = null;
+            document.getElementById('result-container').innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted);">
+                    <div>กำลังรีเฟรช...</div>
+                </div>`;
+            loadData();
+        }
+
+        function populateDropdown(elId, data, key, sortNum) {
+            const select = document.getElementById(elId);
+            const values = new Set();
+            data.forEach(r => { if(r[key]) values.add(String(r[key]).trim()); });
+            let sorted = Array.from(values);
+            if(sortNum) sorted.sort((a,b) => parseFloat(a) - parseFloat(b)); else sorted.sort();
+            select.innerHTML = `<option value="">-- เลือก${key} --</option>`;
+            sorted.forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val; opt.textContent = val; select.appendChild(opt);
+            });
+        }
+
         function updateColorOptions() {
-            const selectedThickness = document.getElementById('thicknessInput').value;
-            const colorSelect = document.getElementById('colorInput');
+            const thk = document.getElementById('thicknessInput').value;
+            const colSel = document.getElementById('colorInput');
+            if(!thk) { colSel.disabled = true; colSel.innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>'; return; }
+            const filtered = excelDataCache.filter(r => String(r['ความหนา']).trim() === thk);
+            populateDropdown('colorInput', filtered, 'สี', false);
+            colSel.disabled = false;
+        }
+
+        function findAllMatches() {
+            const thk = document.getElementById('thicknessInput').value;
+            const col = document.getElementById('colorInput').value;
+            if(!thk || !col) { alert('กรุณาเลือกข้อมูลให้ครบ'); return; }
+
+            const minArea = 84 * 96;
+            const highlightArea = 108 * 144;
             
-            if (!selectedThickness) {
-                colorSelect.innerHTML = '<option value="">-- กรุณาเลือกความหนาก่อน --</option>';
-                colorSelect.disabled = true;
-                return;
-            }
-            if (!excelDataCache) {
-                showResultText('error', 'ข้อมูลยังโหลดไม่เสร็จ กรุณารอสักครู่');
-                return;
-            }
-            const thickness_col = 'ความหนา';
-            const filteredData = excelDataCache.filter(row => {
-                return String(row[thickness_col] || '').trim() === selectedThickness;
-            });
-            populateDropdown('colorInput', filteredData, 'สี', false);
-            colorSelect.disabled = false;
-        }
-        
-        function showResultText(type, message) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.className = type; 
-            resultDiv.textContent = message; 
-            resultDiv.style.display = 'block';
-        }
-        function showResultHTML(htmlContent) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.className = 'html-result'; 
-            resultDiv.innerHTML = htmlContent; 
-            resultDiv.style.display = 'block';
-        }
+            let matches = excelDataCache.filter(r => 
+                String(r['ความหนา']).trim() === thk && String(r['สี']).trim() === col
+            ).map(r => {
+                const parts = (r['ขนาด']||'').toLowerCase().split('x');
+                const w = parseFloat(parts[0])||0; const h = parseFloat(parts[1])||0;
+                return { ...r, area: w*h, w: w };
+            }).filter(i => i.area >= minArea);
+            
+            matches.sort((a,b) => a.w - b.w);
 
-        function getFileData() {
-            return new Promise((resolve, reject) => {
-                if (excelDataCache && excelDataCache.length > 0) {
-                    resolve(excelDataCache); 
-                } else if (excelDataCache) {
-                        reject('ข้อมูลใน Cache ว่างเปล่า หรือโหลดไม่สำเร็จ');
-                } else {
-                    reject('ยังไม่ได้โหลดข้อมูล หรือกำลังรอข้อมูลจาก Google Sheet');
+            const resultContainer = document.getElementById('result-container');
+            if(matches.length === 0) {
+                resultContainer.innerHTML = `<div style="padding:20px; text-align:center; color:#991b1b;">❌ ไม่พบขนาดที่ต้องการ</div>`;
+                return;
+            }
+
+            let headerHTML = `
+                <div class="summary-header">
+                    <span>${thk} / ${col}</span>
+                    <span>พบ ${matches.length} รายการ</span>
+                </div>
+                <div class="table-header">
+                    <div class="flex-col">ขนาด </div>
+                    <div class="flex-col right">คงเหลือ / ตำแหน่ง</div>
+                </div>
+            `;
+
+            let bodyHTML = `<div class="table-body">`;
+            matches.forEach(item => {
+                const isHighlight = item.area >= highlightArea ? 'highlight-row' : '';
+                const loc = item['ตำแหน่ง'] || '-';
+                
+                // --- Logic ปรับแต่งสีตัวเลข ---
+                let qty = item['คงเหลือ'];
+                
+                // ถ้าไม่มีค่า ให้เป็น 0
+                if (qty === undefined || qty === null || String(qty).trim() === '') {
+                    qty = '0';
                 }
+
+                // ถ้าเป็น 0 ให้เปลี่ยนเป็นสีแดง
+                let qtyDisplay = qty;
+                if (parseFloat(qty) === 0) {
+                    qtyDisplay = `<span style="color: var(--error-text); font-weight: bold;">${qty}</span>`;
+                }
+                // ---------------------------
+
+                bodyHTML += `
+                    <div class="flex-row ${isHighlight}">
+                        <div class="flex-col" style="font-weight:bold;">${item['ขนาด']}</div>
+                        <div class="flex-col right">
+                            ${qtyDisplay} แผ่น &nbsp;
+                            <a href="#" class="clickable-cell" onclick="showLocation('${loc}')">📍 ดูตำแหน่ง</a>
+                        </div>
+                    </div>
+                `;
             });
-        }
-        
-        function getArea(sizeString) {
-            try {
-                const parts = String(sizeString || '').trim().split('x');
-                const width = parseFloat(parts[0]);
-                const height = parseFloat(parts[1]);
-                if (isNaN(width) || isNaN(height)) { return 0; }
-                return width * height;
-            } catch (e) { return 0; }
+            bodyHTML += `</div>`;
+
+            resultContainer.innerHTML = headerHTML + bodyHTML;
         }
 
-        function getWidth(sizeString) {
-             try {
-                const parts = String(sizeString || '').trim().split('x');
-                const width = parseFloat(parts[0]); 
-                if (isNaN(width)) { return 0; }
-                return width;
-            } catch (e) { return 0; }
-        }
-
-        function showLocationPopup(cellElement) {
-            const locationData = cellElement.getAttribute('data-location');
-            document.getElementById('modalLocationData').textContent = locationData;
+        function showLocation(loc) {
+            document.getElementById('modalLocationData').textContent = loc;
             document.getElementById('locationModal').classList.add('active');
         }
-
-        function closeLocationPopup() {
+        function closeModal() {
             document.getElementById('locationModal').classList.remove('active');
         }
-
-        function escapeHTML(str) {
-             return String(str || '').replace(/"/g, '&quot;');
-        }
-
-        async function findAllMatches() {
-            const color = document.getElementById('colorInput').value.toLowerCase();
-            const thickness = document.getElementById('thicknessInput').value.toLowerCase(); 
-            
-            if (!color || !thickness) {
-                showResultText('error', 'กรุณาเลือก "ความหนา" และ "สี" ให้ครบครับ');
-                return;
-            }
-            try {
-                const jsonData = await getFileData(); 
-                
-                const color_col = 'สี';
-                const thickness_col = 'ความหนา';
-                const size_col = 'ขนาด';
-                const result_col = 'คงเหลือ';
-                const location_col = 'ตำแหน่ง'; 
-                
-                let matches = []; 
-                const minArea = 84 * 96; 
-                for (const row of jsonData) {
-                    const excelColor = String(row[color_col] || '').trim().toLowerCase();
-                    const excelThickness = String(row[thickness_col] || '').trim().toLowerCase();
-                    
-                    const isColorMatch = excelColor === color;
-                    const isThicknessMatch = excelThickness === thickness;
-
-                    if (isColorMatch && isThicknessMatch) {
-                        const sizeValue = row[size_col] || 'N/A';
-                        const itemArea = getArea(sizeValue); 
-                        if (itemArea >= minArea) {
-                            const resultValue = row[result_col] || 0;
-                            const locationValue = row[location_col] || 'ไม่มีข้อมูลตำแหน่ง'; 
-
-                            matches.push({ 
-                                size: sizeValue, 
-                                remaining: resultValue,
-                                location: locationValue 
-                            });
-                        }
-                    }
-                }
-                
-                matches.sort((a, b) => {
-                    const widthA = getWidth(a.size);
-                    const widthB = getWidth(b.size); 
-                    return widthA - widthB; 
-                });
-                
-                if (matches.length > 0) {
-                    const benchmarkArea = 108 * 144; 
-                    let outputHTML = `
-                        <div class="result-header">
-                            ✅ พบข้อมูลที่ตรงกัน <span>พบ ${matches.length} รายการ</span>
-                        </div>
-                        <table class="result-table">
-                            <thead>
-                                <tr>
-                                    <th>${size_col}</th>
-                                    <th>${result_col} (คลิกดูตำแหน่ง)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-                    for (const item of matches) {
-                        const itemArea = getArea(item.size);
-                        const rowClass = (itemArea > benchmarkArea) ? 'highlight-row' : '';
-                        
-                        const safeLocation = escapeHTML(item.location); 
-                        
-                        outputHTML += `
-                            <tr class="${rowClass}">
-                                <td>${item.size}</td>
-                                <td class="clickable-cell" 
-                                    onclick="showLocationPopup(this)" 
-                                    data-location="${safeLocation}">
-                                    ${item.remaining}
-                                </td>
-                            </tr>
-                        `;
-                    }
-                    outputHTML += `</tbody></table>`;
-                    showResultHTML(outputHTML);
-                } else {
-                    showResultText('error', `❌ ไม่พบข้อมูลที่ตรงกับ (ความหนา: ${thickness}, สี: ${color}) และมีขนาดตั้งแต่ 84x96 ขึ้นไป`);
-                }
-            } catch (errorMsg) {
-                showResultText('error', errorMsg);
-            }
-        }
     </script>
-
 </body>
 </html>

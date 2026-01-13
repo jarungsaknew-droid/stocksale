@@ -21,160 +21,188 @@
             --success-bg: #dcfce7;
             --success-text: #166534;
             --error-bg: #fee2e2;
-            --error-text: #ef4444; /* ปรับสีแดงให้สดขึ้น */
+            --error-text: #ef4444; 
             --highlight-bg: #fef9c3;  
             --highlight-border: #eab308;
             --radius: 16px;
             --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+            
+            --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
             font-family: 'Sarabun', sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            height: 100vh;
-            overflow: hidden;
-            box-sizing: border-box;
+            margin: 0; padding: 20px; height: 100vh;
+            overflow: hidden; box-sizing: border-box;
+            opacity: 0; animation: fadeInPage 0.8s var(--ease-smooth) forwards;
         }
+        @keyframes fadeInPage { to { opacity: 1; } }
 
         .logo {
-            position: fixed; top: 20px; right: 20px;
-            width: 90px; height: auto; z-index: 1000;
+            position: fixed; top: 20px; right: 20px; width: 90px; height: auto; z-index: 1000;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            transition: transform 0.3s var(--ease-elastic);
         }
+        .logo:hover { transform: scale(1.05); }
 
         .version-tag {
-            position: fixed;
-            bottom: 10px;
-            right: 15px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            opacity: 0.6;
-            z-index: 500;
-            pointer-events: none;
-            font-weight: 500;
+            position: fixed; bottom: 10px; right: 15px; font-size: 0.8rem;
+            color: var(--text-muted); opacity: 0.6; z-index: 500; pointer-events: none;
         }
 
         .layout-container {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 25px;
-            max-width: 1100px;
-            margin: 60px auto 0;
-            align-items: start;
+            display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px;
+            max-width: 1100px; margin: 60px auto 0; align-items: start;
         }
 
         .card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
+            background: var(--bg-card); border-radius: var(--radius); padding: 25px;
+            box-shadow: var(--shadow); border: 1px solid #e2e8f0;
+            animation: slideUp 0.6s var(--ease-smooth);
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card h2 { margin-top: 0; color: var(--primary); font-weight: 600; font-size: 1.5rem; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-main); font-weight: 500; }
+
+        /* --- 🎨 Modern Native Select --- */
+        .select-wrapper {
+            position: relative;
         }
         
-        .card h2 {
-            margin-top: 0; color: var(--primary); font-weight: 600; font-size: 1.5rem; margin-bottom: 20px;
+        /* สร้างลูกศรปลอมที่สวยกว่า */
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%; right: 15px;
+            width: 10px; height: 10px;
+            border-right: 2px solid var(--text-muted);
+            border-bottom: 2px solid var(--text-muted);
+            transform: translateY(-70%) rotate(45deg);
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+        
+        /* เมื่อกดเลือก ให้ลูกศรหมุน */
+        .select-wrapper:focus-within::after {
+            transform: translateY(-20%) rotate(225deg);
+            border-color: var(--primary);
         }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 8px; color: var(--text-main); font-weight: 500; }
         .form-control {
-            width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px;
-            font-size: 1rem; color: var(--text-main); background-color: #f8fafc;
+            width: 100%;
+            padding: 14px 15px; /* เพิ่มความสูงให้นิ้วกดง่าย */
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-main);
+            background-color: #f8fafc;
+            
+            /* ลบหน้าตาเดิมของ Browser ออก */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            
+            cursor: pointer;
             box-sizing: border-box; font-family: inherit;
+            transition: all 0.3s var(--ease-smooth);
         }
-        .form-control:focus { outline: none; border-color: var(--primary); background-color: #fff; }
-        .form-control:disabled { background-color: #f1f5f9; color: #94a3b8; }
+
+        .form-control:focus { 
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-control:disabled { 
+            background-color: #f1f5f9; color: #94a3b8; 
+            cursor: not-allowed; opacity: 0.7;
+        }
+
+        /* Animation ตอนช่องสีปลดล็อค */
+        .input-unlock-anim {
+            animation: unlockPop 0.6s var(--ease-elastic);
+            border-color: var(--primary) !important;
+            background-color: #fff !important;
+        }
+        @keyframes unlockPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.03); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+            100% { transform: scale(1); }
+        }
 
         .button-group { margin-top: 25px; }
-        button { border: none; border-radius: 10px; padding: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        button { border: none; border-radius: 10px; padding: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--ease-elastic); font-family: inherit; }
         .btn-primary { width: 100%; background: var(--primary); color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-3px) scale(1.02); }
+        .btn-primary:active { transform: scale(0.95); }
 
         .loader {
-            padding: 10px; border-radius: 12px; background: #f1f5f9; color: var(--secondary);
+            padding: 10px; border-radius: 12px; 
+            background: #f1f5f9; color: var(--secondary);
             font-size: 0.9rem; text-align: center; margin-bottom: 15px;
             display: flex; align-items: center; justify-content: center; gap: 15px;
+            transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
+            border: 1px solid transparent;
         }
-        .loader.success { background: var(--success-bg); color: var(--success-text); border: 1px solid #bbf7d0; }
-        .loader.error { background: var(--error-bg); color: var(--error-text); border: 1px solid #fecaca; }
+        .loader.success { background: var(--success-bg); color: var(--success-text); border-color: #bbf7d0; }
+        .loader.error { background: var(--error-bg); color: var(--error-text); border-color: #fecaca; }
+
+        .loader-content { display: flex; align-items: center; gap: 10px; transition: opacity 0.3s ease; opacity: 1; }
+        .loader-content.fade-out { opacity: 0; }
+        .spinner { width: 18px; height: 18px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .btn-refresh-modern {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: white;
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 36px; height: 36px; border-radius: 50%; background: white;
+            border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: var(--primary); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.5s var(--ease-elastic);
         }
-        .btn-refresh-modern:hover {
-            transform: rotate(180deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            color: var(--primary-dark);
-            background: #fff;
-        }
-        .btn-refresh-modern:active { transform: scale(0.95); }
+        .btn-refresh-modern:hover { transform: rotate(180deg) scale(1.1); background: #fff; color: var(--primary-dark); }
         .refresh-icon-svg { width: 20px; height: 20px; fill: currentColor; }
 
         #result-container {
-            display: flex; flex-direction: column;
-            height: 60vh; 
-            overflow: hidden; 
-            border: 1px solid #e2e8f0; border-radius: 10px;
+            display: flex; flex-direction: column; height: 60vh; 
+            overflow: hidden; border: 1px solid #e2e8f0; border-radius: 10px;
+            transition: all 0.3s;
         }
 
-        .summary-header {
-            background: #eff6ff; color: var(--primary);
-            padding: 15px; font-weight: 600;
-            border-bottom: 1px solid #dbeafe;
-            display: flex; justify-content: space-between; flex-shrink: 0;
-        }
-
-        .table-header {
-            display: flex; background: white; border-bottom: 2px solid #e2e8f0;
-            padding: 10px 0; font-weight: 600; color: var(--text-muted);
-            flex-shrink: 0; padding-right: 6px; 
-        }
-
-        .table-body {
-            flex: 1; overflow-y: auto; overflow-x: hidden; background: white;
-        }
+        .summary-header { background: #eff6ff; color: var(--primary); padding: 15px; font-weight: 600; border-bottom: 1px solid #dbeafe; display: flex; justify-content: space-between; flex-shrink: 0; }
+        .table-header { display: flex; background: white; border-bottom: 2px solid #e2e8f0; padding: 10px 0; font-weight: 600; color: var(--text-muted); flex-shrink: 0; padding-right: 6px; }
+        .table-body { flex: 1; overflow-y: auto; overflow-x: hidden; background: white; scroll-behavior: smooth; }
         .table-body::-webkit-scrollbar { width: 6px; }
         .table-body::-webkit-scrollbar-track { background: #f1f5f9; }
         .table-body::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
-        .flex-row { display: flex; padding: 12px 0; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        .flex-row { 
+            display: flex; padding: 12px 0; border-bottom: 1px solid #f1f5f9; align-items: center; 
+            opacity: 0; transform: translateY(10px); animation: listEntry 0.4s var(--ease-smooth) forwards;
+        }
+        @keyframes listEntry { to { opacity: 1; transform: translateY(0); } }
+
         .flex-col { padding: 0 15px; flex: 1; }
         .flex-col.right { text-align: right; }
-
         .highlight-row { background-color: var(--highlight-bg); }
         .highlight-row .flex-col:first-child { border-left: 4px solid var(--highlight-border); padding-left: 11px; }
 
-        .clickable-cell {
-            cursor: pointer; color: var(--primary); font-weight: 600;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end;
-        }
-        .clickable-cell:hover { text-decoration: underline; }
+        .clickable-cell { cursor: pointer; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end; transition: transform 0.2s; }
+        .clickable-cell:hover { text-decoration: underline; transform: translateX(-3px); }
 
-        .modal-backdrop {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 1001;
-            align-items: center; justify-content: center;
-        }
-        .modal-backdrop.active { display: flex; }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 20px;
-            width: 90%; max-width: 350px; text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative;
-        }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #cbd5e1; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 1001; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .modal-backdrop.active { display: flex; opacity: 1; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; transform: scale(0.8) translateY(20px); opacity: 0; transition: all 0.4s var(--ease-elastic); }
+        .modal-backdrop.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #cbd5e1; transition: color 0.2s; }
+        .modal-close:hover { color: var(--error-text); }
 
-        .disabled { opacity: 0.6; pointer-events: none; }
+        .disabled { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); transition: 0.3s; }
 
         @media (max-width: 768px) {
             body { height: auto; overflow: auto; padding: 10px; }
@@ -189,31 +217,36 @@
 <body>
 
     <img src="https://img2.pic.in.th/pic/images-removebg-preview6f60794d15581bfe.png" alt="Company Logo" class="logo">
-
     <div class="version-tag">v1.0</div>
 
     <div class="layout-container">
         
-        <div class="card">
+        <div class="card" style="animation-delay: 0.1s;">
             <h2>🔎 ค้นหากระจก</h2>
             
             <div id="loader-status" class="loader">
-                Connecting...
+                <div id="loader-content-wrapper" class="loader-content">
+                    <div class="spinner"></div> <span>Connecting...</span>
+                </div>
             </div>
 
             <div id="form-wrapper" class="disabled">
                 <div class="form-group">
                     <label>ความหนา</label>
-                    <select id="thicknessInput" class="form-control" onchange="updateColorOptions()">
-                        <option value="">-- รอข้อมูล --</option>
-                    </select>
+                    <div class="select-wrapper">
+                        <select id="thicknessInput" class="form-control" onchange="updateColorOptions()">
+                            <option value="">-- รอข้อมูล --</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>สี</label>
-                    <select id="colorInput" class="form-control" disabled>
-                        <option value="">-- เลือกความหนาก่อน --</option>
-                    </select>
+                    <div class="select-wrapper">
+                        <select id="colorInput" class="form-control" disabled>
+                            <option value="">-- เลือกความหนาก่อน --</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="button-group">
@@ -224,9 +257,8 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" style="animation-delay: 0.2s;">
             <h2 style="margin-bottom: 15px;">📦 รายการกระจก</h2>
-            
             <div id="result-container">
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted);">
                     <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="60" style="opacity: 0.3; margin-bottom: 15px;">
@@ -248,41 +280,48 @@
 
     <script>
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMdBbCfyGwd4W-gIBCrS5FcDjyBO4VugS-vWcYWZbbj02E3g2tLlgUGsv7aWZnZN5Q/exec'; 
-
         const REFRESH_ICON_SVG = `<svg class="refresh-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.9381 13C19.979 12.6724 20 12.3387 20 12C20 7.58172 16.4183 4 12 4C9.49942 4 7.26681 5.14727 5.7998 6.94416M5.7998 6.94416V4M5.7998 6.94416H8.96917M4.06189 11C4.02104 11.3276 4 11.6613 4 12C4 16.4183 7.58172 20 12 20C14.3894 20 16.5341 18.9525 18 17.2916M18 17.2916V20M18 17.2916H14.8308" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
         let excelDataCache = null;
         window.onload = loadData;
 
-        function loadData() {
+        function updateLoaderState(state, htmlContent) {
             const loader = document.getElementById('loader-status');
+            const contentWrapper = document.getElementById('loader-content-wrapper');
+            contentWrapper.classList.add('fade-out');
+            setTimeout(() => {
+                loader.className = `loader ${state}`;
+                contentWrapper.innerHTML = htmlContent;
+                contentWrapper.classList.remove('fade-out');
+            }, 300);
+        }
+
+        function loadData() {
             const wrapper = document.getElementById('form-wrapper');
-            loader.className = 'loader';
-            loader.innerHTML = '<div class="spinner"></div> ☁️ กำลังโหลดข้อมูล...';
             wrapper.classList.add('disabled');
+            updateLoaderState('', '<div class="spinner"></div> <span>☁️ กำลังโหลดข้อมูล...</span>');
 
             Papa.parse(GOOGLE_APPS_SCRIPT_URL, {
                 download: true, header: true, skipEmptyLines: true,
                 complete: function(results) {
                     excelDataCache = results.data;
                     const updateTime = (excelDataCache.length > 0 && excelDataCache[0]['Update']) ? excelDataCache[0]['Update'] : '-';
+                    
                     populateDropdown('thicknessInput', excelDataCache, 'ความหนา', true);
+                    
                     document.getElementById('colorInput').innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>';
                     document.getElementById('colorInput').disabled = true;
-                    loader.className = 'loader success';
-                    
-                    loader.innerHTML = `
+
+                    updateLoaderState('success', `
                         <span>✅ ข้อมูลล่าสุด: <b>${updateTime}</b></span>
                         <button onclick="reloadData()" class="btn-refresh-modern" title="อัปเดตข้อมูล">
                             ${REFRESH_ICON_SVG}
                         </button>
-                    `;
-                    
+                    `);
                     wrapper.classList.remove('disabled');
                 },
                 error: function(err) {
-                    loader.className = 'loader error';
-                    loader.innerHTML = `โหลดไม่สำเร็จ <button onclick="reloadData()" class="btn-refresh-modern">${REFRESH_ICON_SVG}</button>`;
+                    updateLoaderState('error', `โหลดไม่สำเร็จ <button onclick="reloadData()" class="btn-refresh-modern">${REFRESH_ICON_SVG}</button>`);
                 }
             });
         }
@@ -314,10 +353,24 @@
         function updateColorOptions() {
             const thk = document.getElementById('thicknessInput').value;
             const colSel = document.getElementById('colorInput');
-            if(!thk) { colSel.disabled = true; colSel.innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>'; return; }
+            
+            if(!thk) { 
+                colSel.disabled = true; 
+                colSel.innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>'; 
+                colSel.classList.remove('input-unlock-anim');
+                return; 
+            }
+
             const filtered = excelDataCache.filter(r => String(r['ความหนา']).trim() === thk);
             populateDropdown('colorInput', filtered, 'สี', false);
+            
+            // Unlock & Animate
             colSel.disabled = false;
+            
+            // Animation Reset
+            colSel.classList.remove('input-unlock-anim');
+            void colSel.offsetWidth; 
+            colSel.classList.add('input-unlock-anim');
         }
 
         function findAllMatches() {
@@ -356,27 +409,21 @@
             `;
 
             let bodyHTML = `<div class="table-body">`;
-            matches.forEach(item => {
+            matches.forEach((item, index) => {
                 const isHighlight = item.area >= highlightArea ? 'highlight-row' : '';
                 const loc = item['ตำแหน่ง'] || '-';
                 
-                // --- Logic ปรับแต่งสีตัวเลข ---
                 let qty = item['คงเหลือ'];
-                
-                // ถ้าไม่มีค่า ให้เป็น 0
-                if (qty === undefined || qty === null || String(qty).trim() === '') {
-                    qty = '0';
-                }
-
-                // ถ้าเป็น 0 ให้เปลี่ยนเป็นสีแดง
+                if (qty === undefined || qty === null || String(qty).trim() === '') { qty = '0'; }
                 let qtyDisplay = qty;
                 if (parseFloat(qty) === 0) {
                     qtyDisplay = `<span style="color: var(--error-text); font-weight: bold;">${qty}</span>`;
                 }
-                // ---------------------------
+
+                const delay = index * 0.05; 
 
                 bodyHTML += `
-                    <div class="flex-row ${isHighlight}">
+                    <div class="flex-row ${isHighlight}" style="animation-delay: ${delay}s;">
                         <div class="flex-col" style="font-weight:bold;">${item['ขนาด']}</div>
                         <div class="flex-col right">
                             ${qtyDisplay} แผ่น &nbsp;
@@ -392,12 +439,16 @@
 
         function showLocation(loc) {
             document.getElementById('modalLocationData').textContent = loc;
-            document.getElementById('locationModal').classList.add('active');
+            const modal = document.getElementById('locationModal');
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.classList.add('active'); }, 10);
         }
+        
         function closeModal() {
-            document.getElementById('locationModal').classList.remove('active');
+            const modal = document.getElementById('locationModal');
+            modal.classList.remove('active');
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
         }
     </script>
 </body>
 </html>
-

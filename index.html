@@ -24,6 +24,8 @@
             --error-text: #ef4444; 
             --highlight-bg: #fef9c3;  
             --highlight-border: #eab308;
+            --small-bg: #fff7ed;
+            --small-border: #f97316;
             --radius: 16px;
             --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
             
@@ -96,14 +98,13 @@
 
         .form-control {
             width: 100%;
-            padding: 14px 15px; /* เพิ่มความสูงให้นิ้วกดง่าย */
+            padding: 14px 15px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 1rem;
             color: var(--text-main);
             background-color: #f8fafc;
             
-            /* ลบหน้าตาเดิมของ Browser ออก */
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -189,8 +190,26 @@
 
         .flex-col { padding: 0 15px; flex: 1; }
         .flex-col.right { text-align: right; }
+
+        /* แถวไซส์ใหญ่พิเศษ (108 x 144 ขึ้นไป) */
         .highlight-row { background-color: var(--highlight-bg); }
         .highlight-row .flex-col:first-child { border-left: 4px solid var(--highlight-border); padding-left: 11px; }
+
+        /* แถวไซส์เล็ก (น้อยกว่า 84 x 96) */
+        .small-row { background-color: var(--small-bg); }
+        .small-row .flex-col:first-child { border-left: 4px solid var(--small-border); padding-left: 11px; }
+
+        /* ป้ายกำกับไซส์เล็ก */
+        .badge-small {
+            font-size: 0.72rem;
+            font-weight: 500;
+            background: #ffedd5;
+            color: #c2410c;
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
 
         .clickable-cell { cursor: pointer; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end; transition: transform 0.2s; }
         .clickable-cell:hover { text-decoration: underline; transform: translateX(-3px); }
@@ -381,13 +400,14 @@
             const minArea = 84 * 96;
             const highlightArea = 108 * 144;
             
+            // ยกเลิก filter minArea เพื่อให้แสดงทุกขนาด
             let matches = excelDataCache.filter(r => 
                 String(r['ความหนา']).trim() === thk && String(r['สี']).trim() === col
             ).map(r => {
                 const parts = (r['ขนาด']||'').toLowerCase().split('x');
                 const w = parseFloat(parts[0])||0; const h = parseFloat(parts[1])||0;
                 return { ...r, area: w*h, w: w };
-            }).filter(i => i.area >= minArea);
+            });
             
             matches.sort((a,b) => a.w - b.w);
 
@@ -410,7 +430,17 @@
 
             let bodyHTML = `<div class="table-body">`;
             matches.forEach((item, index) => {
-                const isHighlight = item.area >= highlightArea ? 'highlight-row' : '';
+                let rowClass = '';
+                let badgeHTML = '';
+
+                // แยกเงื่อนไขการใส่สีและ Badge
+                if (item.area >= highlightArea) {
+                    rowClass = 'highlight-row'; // ขนาดใหญ่พิเศษ (แถบเหลือง)
+                } else if (item.area < minArea) {
+                    rowClass = 'small-row';     // ขนาดเล็กกว่า 84x96 (แถบส้ม)
+                    badgeHTML = `<span class="badge-small">ไซส์เล็ก</span>`;
+                }
+
                 const loc = item['ตำแหน่ง'] || '-';
                 
                 let qty = item['คงเหลือ'];
@@ -423,8 +453,10 @@
                 const delay = index * 0.05; 
 
                 bodyHTML += `
-                    <div class="flex-row ${isHighlight}" style="animation-delay: ${delay}s;">
-                        <div class="flex-col" style="font-weight:bold;">${item['ขนาด']}</div>
+                    <div class="flex-row ${rowClass}" style="animation-delay: ${delay}s;">
+                        <div class="flex-col" style="font-weight:bold;">
+                            ${item['ขนาด']} ${badgeHTML}
+                        </div>
                         <div class="flex-col right">
                             ${qtyDisplay} แผ่น &nbsp;
                             <a href="#" class="clickable-cell" onclick="showLocation('${loc}')">📍 ดูตำแหน่ง</a>

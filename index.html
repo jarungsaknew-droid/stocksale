@@ -16,6 +16,9 @@
             --secondary: #64748b;     
             --bg-body: #f8fafc;       
             --bg-card: #ffffff;       
+            --border-card: #e2e8f0;
+            --input-bg: #f8fafc;
+            --input-border: #e2e8f0;
             --text-main: #0f172a;     
             --text-muted: #64748b;    
             --success-bg: #dcfce7;
@@ -26,11 +29,46 @@
             --highlight-border: #eab308;
             --small-bg: #fff7ed;
             --small-border: #f97316;
+            --table-header-bg: #ffffff;
+            --table-summary-bg: #eff6ff;
+            --table-summary-border: #dbeafe;
+            --table-row-border: #f1f5f9;
+            --table-track: #f1f5f9;
+            --table-thumb: #cbd5e1;
             --radius: 16px;
             --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
             
             --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
             --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- 🌙 Dark Mode Theme Variables --- */
+        body.dark-mode {
+            --primary: #3b82f6;
+            --primary-dark: #60a5fa;
+            --secondary: #94a3b8;
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border-card: #334155;
+            --input-bg: #0f172a;
+            --input-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success-bg: rgba(22, 101, 52, 0.25);
+            --success-text: #4ade80;
+            --error-bg: rgba(239, 68, 68, 0.2);
+            --error-text: #f87171;
+            --highlight-bg: #423613;
+            --highlight-border: #facc15;
+            --small-bg: #432413;
+            --small-border: #fb923c;
+            --table-header-bg: #1e293b;
+            --table-summary-bg: #172554;
+            --table-summary-border: #1e3a8a;
+            --table-row-border: #334155;
+            --table-track: #0f172a;
+            --table-thumb: #475569;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
 
         body {
@@ -40,6 +78,7 @@
             margin: 0; padding: 20px; height: 100vh;
             overflow: hidden; box-sizing: border-box;
             opacity: 0; animation: fadeInPage 0.8s var(--ease-smooth) forwards;
+            transition: background-color 0.4s var(--ease-smooth), color 0.4s var(--ease-smooth);
         }
         @keyframes fadeInPage { to { opacity: 1; } }
 
@@ -55,6 +94,26 @@
             color: var(--text-muted); opacity: 0.6; z-index: 500; pointer-events: none;
         }
 
+        /* --- 🔘 Theme Toggle Button (ลอยมุมซ้ายล่าง) --- */
+        .theme-toggle-btn {
+            position: fixed; bottom: 18px; left: 18px;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--bg-card); color: var(--text-main);
+            border: 1px solid var(--border-card);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; z-index: 1000;
+            transition: all 0.4s var(--ease-elastic);
+            user-select: none;
+        }
+        .theme-toggle-btn:hover {
+            transform: scale(1.12) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+        }
+        .theme-toggle-btn:active {
+            transform: scale(0.92);
+        }
+
         .layout-container {
             display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px;
             max-width: 1100px; margin: 60px auto 0; align-items: start;
@@ -62,8 +121,9 @@
 
         .card {
             background: var(--bg-card); border-radius: var(--radius); padding: 25px;
-            box-shadow: var(--shadow); border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow); border: 1px solid var(--border-card);
             animation: slideUp 0.6s var(--ease-smooth);
+            transition: background-color 0.4s var(--ease-smooth), border-color 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth);
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -77,7 +137,6 @@
             position: relative;
         }
         
-        /* สร้างลูกศรปลอมที่สวยกว่า */
         .select-wrapper::after {
             content: '';
             position: absolute;
@@ -90,7 +149,6 @@
             transition: all 0.3s;
         }
         
-        /* เมื่อกดเลือก ให้ลูกศรหมุน */
         .select-wrapper:focus-within::after {
             transform: translateY(-20%) rotate(225deg);
             border-color: var(--primary);
@@ -99,11 +157,11 @@
         .form-control {
             width: 100%;
             padding: 14px 15px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--input-border);
             border-radius: 12px;
             font-size: 1rem;
             color: var(--text-main);
-            background-color: #f8fafc;
+            background-color: var(--input-bg);
             
             appearance: none;
             -webkit-appearance: none;
@@ -117,24 +175,24 @@
         .form-control:focus { 
             outline: none;
             border-color: var(--primary);
-            background-color: #fff;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
+            background-color: var(--bg-card);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
         }
         
         .form-control:disabled { 
-            background-color: #f1f5f9; color: #94a3b8; 
-            cursor: not-allowed; opacity: 0.7;
+            background-color: rgba(148, 163, 184, 0.12); color: var(--text-muted); 
+            cursor: not-allowed; opacity: 0.6;
         }
 
         /* Animation ตอนช่องสีปลดล็อค */
         .input-unlock-anim {
             animation: unlockPop 0.6s var(--ease-elastic);
             border-color: var(--primary) !important;
-            background-color: #fff !important;
+            background-color: var(--bg-card) !important;
         }
         @keyframes unlockPop {
             0% { transform: scale(1); }
-            40% { transform: scale(1.03); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+            40% { transform: scale(1.03); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
             100% { transform: scale(1); }
         }
 
@@ -146,14 +204,14 @@
 
         .loader {
             padding: 10px; border-radius: 12px; 
-            background: #f1f5f9; color: var(--secondary);
+            background: var(--input-bg); color: var(--secondary);
             font-size: 0.9rem; text-align: center; margin-bottom: 15px;
             display: flex; align-items: center; justify-content: center; gap: 15px;
             transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
-            border: 1px solid transparent;
+            border: 1px solid var(--border-card);
         }
-        .loader.success { background: var(--success-bg); color: var(--success-text); border-color: #bbf7d0; }
-        .loader.error { background: var(--error-bg); color: var(--error-text); border-color: #fecaca; }
+        .loader.success { background: var(--success-bg); color: var(--success-text); border-color: rgba(34, 197, 94, 0.3); }
+        .loader.error { background: var(--error-bg); color: var(--error-text); border-color: rgba(239, 68, 68, 0.3); }
 
         .loader-content { display: flex; align-items: center; gap: 10px; transition: opacity 0.3s ease; opacity: 1; }
         .loader-content.fade-out { opacity: 0; }
@@ -161,29 +219,37 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .btn-refresh-modern {
-            width: 36px; height: 36px; border-radius: 50%; background: white;
-            border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            color: var(--primary); display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%; 
+            background: var(--bg-card); color: var(--primary);
+            border: 1px solid var(--border-card); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.5s var(--ease-elastic);
         }
-        .btn-refresh-modern:hover { transform: rotate(180deg) scale(1.1); background: #fff; color: var(--primary-dark); }
+        .btn-refresh-modern:hover { transform: rotate(180deg) scale(1.1); color: var(--primary-dark); }
         .refresh-icon-svg { width: 20px; height: 20px; fill: currentColor; }
 
         #result-container {
             display: flex; flex-direction: column; height: 60vh; 
-            overflow: hidden; border: 1px solid #e2e8f0; border-radius: 10px;
+            overflow: hidden; border: 1px solid var(--border-card); border-radius: 10px;
             transition: all 0.3s;
         }
 
-        .summary-header { background: #eff6ff; color: var(--primary); padding: 15px; font-weight: 600; border-bottom: 1px solid #dbeafe; display: flex; justify-content: space-between; flex-shrink: 0; }
-        .table-header { display: flex; background: white; border-bottom: 2px solid #e2e8f0; padding: 10px 0; font-weight: 600; color: var(--text-muted); flex-shrink: 0; padding-right: 6px; }
-        .table-body { flex: 1; overflow-y: auto; overflow-x: hidden; background: white; scroll-behavior: smooth; }
+        .summary-header { 
+            background: var(--table-summary-bg); color: var(--primary); 
+            padding: 15px; font-weight: 600; border-bottom: 1px solid var(--table-summary-border); 
+            display: flex; justify-content: space-between; flex-shrink: 0; 
+        }
+        .table-header { 
+            display: flex; background: var(--table-header-bg); border-bottom: 2px solid var(--border-card); 
+            padding: 10px 0; font-weight: 600; color: var(--text-muted); flex-shrink: 0; padding-right: 6px; 
+        }
+        .table-body { flex: 1; overflow-y: auto; overflow-x: hidden; background: var(--bg-card); scroll-behavior: smooth; }
         .table-body::-webkit-scrollbar { width: 6px; }
-        .table-body::-webkit-scrollbar-track { background: #f1f5f9; }
-        .table-body::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .table-body::-webkit-scrollbar-track { background: var(--table-track); }
+        .table-body::-webkit-scrollbar-thumb { background-color: var(--table-thumb); border-radius: 10px; }
 
         .flex-row { 
-            display: flex; padding: 12px 0; border-bottom: 1px solid #f1f5f9; align-items: center; 
+            display: flex; padding: 12px 0; border-bottom: 1px solid var(--table-row-border); align-items: center; 
             opacity: 0; transform: translateY(10px); animation: listEntry 0.4s var(--ease-smooth) forwards;
         }
         @keyframes listEntry { to { opacity: 1; transform: translateY(0); } }
@@ -210,15 +276,19 @@
             margin-left: 6px;
             vertical-align: middle;
         }
+        body.dark-mode .badge-small {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fdba74;
+        }
 
         .clickable-cell { cursor: pointer; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end; transition: transform 0.2s; }
         .clickable-cell:hover { text-decoration: underline; transform: translateX(-3px); }
 
-        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 1001; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1001; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-backdrop.active { display: flex; opacity: 1; }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; transform: scale(0.8) translateY(20px); opacity: 0; transition: all 0.4s var(--ease-elastic); }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border-card); padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25); position: relative; transform: scale(0.8) translateY(20px); opacity: 0; transition: all 0.4s var(--ease-elastic); }
         .modal-backdrop.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #cbd5e1; transition: color 0.2s; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
         .modal-close:hover { color: var(--error-text); }
 
         .disabled { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); transition: 0.3s; }
@@ -230,6 +300,7 @@
             .logo { width: 70px; top: 10px; right: 10px; }
             #result-container { height: 50vh; } 
             .version-tag { display: none; }
+            .theme-toggle-btn { bottom: 12px; left: 12px; width: 40px; height: 40px; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -237,6 +308,11 @@
 
     <img src="https://img2.pic.in.th/pic/images-removebg-preview6f60794d15581bfe.png" alt="Company Logo" class="logo">
     <div class="version-tag">v1.0</div>
+
+    <!-- ปุ่มสลับโหมดมุมซ้ายล่าง -->
+    <button id="themeToggle" class="theme-toggle-btn" onclick="toggleTheme()" title="สลับโหมดมืด / โหมดสว่าง">
+        🌙
+    </button>
 
     <div class="layout-container">
         
@@ -302,7 +378,36 @@
         const REFRESH_ICON_SVG = `<svg class="refresh-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.9381 13C19.979 12.6724 20 12.3387 20 12C20 7.58172 16.4183 4 12 4C9.49942 4 7.26681 5.14727 5.7998 6.94416M5.7998 6.94416V4M5.7998 6.94416H8.96917M4.06189 11C4.02104 11.3276 4 11.6613 4 12C4 16.4183 7.58172 20 12 20C14.3894 20 16.5341 18.9525 18 17.2916M18 17.2916V20M18 17.2916H14.8308" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
         let excelDataCache = null;
-        window.onload = loadData;
+
+        // --- 🌓 ฟังก์ชันจัดการ Dark Mode ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ksg_theme');
+            const themeBtn = document.getElementById('themeToggle');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeBtn.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeBtn.textContent = '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            const themeBtn = document.getElementById('themeToggle');
+            if (isDark) {
+                themeBtn.textContent = '☀️';
+                localStorage.setItem('ksg_theme', 'dark');
+            } else {
+                themeBtn.textContent = '🌙';
+                localStorage.setItem('ksg_theme', 'light');
+            }
+        }
+
+        window.onload = function() {
+            initTheme();
+            loadData();
+        };
 
         function updateLoaderState(state, htmlContent) {
             const loader = document.getElementById('loader-status');
@@ -383,10 +488,7 @@
             const filtered = excelDataCache.filter(r => String(r['ความหนา']).trim() === thk);
             populateDropdown('colorInput', filtered, 'สี', false);
             
-            // Unlock & Animate
             colSel.disabled = false;
-            
-            // Animation Reset
             colSel.classList.remove('input-unlock-anim');
             void colSel.offsetWidth; 
             colSel.classList.add('input-unlock-anim');
@@ -400,7 +502,6 @@
             const minArea = 84 * 96;
             const highlightArea = 108 * 144;
             
-            // ยกเลิก filter minArea เพื่อให้แสดงทุกขนาด
             let matches = excelDataCache.filter(r => 
                 String(r['ความหนา']).trim() === thk && String(r['สี']).trim() === col
             ).map(r => {
@@ -413,7 +514,7 @@
 
             const resultContainer = document.getElementById('result-container');
             if(matches.length === 0) {
-                resultContainer.innerHTML = `<div style="padding:20px; text-align:center; color:#991b1b;">❌ ไม่พบขนาดที่ต้องการ</div>`;
+                resultContainer.innerHTML = `<div style="padding:20px; text-align:center; color:#ef4444;">❌ ไม่พบขนาดที่ต้องการ</div>`;
                 return;
             }
 
@@ -433,11 +534,10 @@
                 let rowClass = '';
                 let badgeHTML = '';
 
-                // แยกเงื่อนไขการใส่สีและ Badge
                 if (item.area >= highlightArea) {
-                    rowClass = 'highlight-row'; // ขนาดใหญ่พิเศษ (แถบเหลือง)
+                    rowClass = 'highlight-row';
                 } else if (item.area < minArea) {
-                    rowClass = 'small-row';     // ขนาดเล็กกว่า 84x96 (แถบส้ม)
+                    rowClass = 'small-row';
                     badgeHTML = `<span class="badge-small">ไซส์เล็ก</span>`;
                 }
 

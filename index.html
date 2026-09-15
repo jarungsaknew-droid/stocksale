@@ -8,210 +8,261 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
 
         :root {
-            --primary: #2563eb;       
-            --primary-dark: #1e40af;
+            --primary: #007aff;       
+            --primary-dark: #0056b3;
+            --primary-glow: rgba(0, 122, 255, 0.45);
             --secondary: #64748b;     
-            --bg-body: #f8fafc;       
-            --bg-card: #ffffff;       
-            --border-card: #e2e8f0;
-            --input-bg: #f8fafc;
-            --input-border: #e2e8f0;
+            --bg-body: #e2e8f0;       
+
+            /* 💧 Liquid Glass Variables (Light Mode) */
+            --bg-card: rgba(255, 255, 255, 0.32);
+            --border-card: rgba(255, 255, 255, 0.75);
+            --input-bg: rgba(255, 255, 255, 0.25);
+            --input-border: rgba(255, 255, 255, 0.6);
             --text-main: #0f172a;     
-            --text-muted: #64748b;    
-            --success-bg: #dcfce7;
-            --success-text: #166534;
-            --error-bg: #fee2e2;
-            --error-text: #ef4444; 
-            --highlight-bg: #fef9c3;  
+            --text-muted: #475569;    
+            --success-bg: rgba(34, 197, 94, 0.2);
+            --success-text: #15803d;
+            --error-bg: rgba(239, 68, 68, 0.2);
+            --error-text: #b91c1c; 
+            --highlight-bg: rgba(250, 204, 21, 0.25);  
             --highlight-border: #eab308;
-            --small-bg: #fff7ed;
-            --small-border: #f97316;
-            --table-header-bg: #ffffff;
-            --table-summary-bg: #eff6ff;
-            --table-summary-border: #dbeafe;
-            --table-row-border: #f1f5f9;
-            --table-track: #f1f5f9;
-            --table-thumb: #cbd5e1;
-            --radius: 16px;
-            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+            --small-bg: rgba(249, 115, 22, 0.22);
+            --small-border: #ea580c;
+            --table-header-bg: rgba(255, 255, 255, 0.25);
+            --table-summary-bg: rgba(0, 122, 255, 0.15);
+            --table-summary-border: rgba(0, 122, 255, 0.25);
+            --table-row-border: rgba(255, 255, 255, 0.35);
+            --table-track: transparent;
+            --table-thumb: rgba(255, 255, 255, 0.5);
+            --radius: 26px;
+            
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 
+                      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+                      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.05);
+            --glass-blur: blur(35px) saturate(210%);
             
             --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* --- 🌙 Dark Mode Theme Variables --- */
+        /* 🌙 Dark Mode Liquid Glass */
         body.dark-mode {
-            --primary: #3b82f6;
-            --primary-dark: #60a5fa;
+            --primary: #0a84ff;
+            --primary-dark: #409cff;
+            --primary-glow: rgba(10, 132, 255, 0.55);
             --secondary: #94a3b8;
-            --bg-body: #0f172a;
-            --bg-card: #1e293b;
-            --border-card: #334155;
-            --input-bg: #0f172a;
-            --input-border: #334155;
+            --bg-body: #030712;
+
+            --bg-card: rgba(15, 23, 42, 0.38);
+            --border-card: rgba(255, 255, 255, 0.2);
+            --input-bg: rgba(255, 255, 255, 0.07);
+            --input-border: rgba(255, 255, 255, 0.18);
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success-bg: rgba(22, 101, 52, 0.25);
+            --text-muted: #cbd5e1;
+            --success-bg: rgba(34, 197, 94, 0.22);
             --success-text: #4ade80;
-            --error-bg: rgba(239, 68, 68, 0.2);
+            --error-bg: rgba(239, 68, 68, 0.25);
             --error-text: #f87171;
-            --highlight-bg: #423613;
+            --highlight-bg: rgba(234, 179, 8, 0.2);
             --highlight-border: #facc15;
-            --small-bg: #432413;
+            --small-bg: rgba(249, 115, 22, 0.2);
             --small-border: #fb923c;
-            --table-header-bg: #1e293b;
-            --table-summary-bg: #172554;
-            --table-summary-border: #1e3a8a;
-            --table-row-border: #334155;
-            --table-track: #0f172a;
-            --table-thumb: #475569;
-            --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            --table-header-bg: rgba(255, 255, 255, 0.06);
+            --table-summary-bg: rgba(10, 132, 255, 0.22);
+            --table-summary-border: rgba(10, 132, 255, 0.35);
+            --table-row-border: rgba(255, 255, 255, 0.08);
+            --table-track: transparent;
+            --table-thumb: rgba(255, 255, 255, 0.25);
+            --shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 
+                      inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+                      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4);
         }
+
+        * { box-sizing: border-box; }
 
         body {
-            font-family: 'Sarabun', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif;
             background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(at 15% 15%, rgba(0, 122, 255, 0.4) 0px, transparent 55%),
+                radial-gradient(at 85% 25%, rgba(217, 70, 239, 0.35) 0px, transparent 50%),
+                radial-gradient(at 50% 85%, rgba(20, 184, 166, 0.35) 0px, transparent 55%);
+            background-attachment: fixed;
             color: var(--text-main);
             margin: 0; padding: 20px; height: 100vh;
-            overflow: hidden; box-sizing: border-box;
+            overflow: hidden;
             opacity: 0; animation: fadeInPage 0.8s var(--ease-smooth) forwards;
-            transition: background-color 0.4s var(--ease-smooth), color 0.4s var(--ease-smooth);
+            transition: background 0.6s var(--ease-smooth), color 0.6s var(--ease-smooth);
         }
         @keyframes fadeInPage { to { opacity: 1; } }
 
         .logo {
             position: fixed; top: 20px; right: 20px; width: 90px; height: auto; z-index: 1000;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
             transition: transform 0.3s var(--ease-elastic);
         }
-        .logo:hover { transform: scale(1.05); }
+        .logo:hover { transform: scale(1.08) rotate(-2deg); }
 
         .version-tag {
             position: fixed; bottom: 10px; right: 15px; font-size: 0.8rem;
             color: var(--text-muted); opacity: 0.6; z-index: 500; pointer-events: none;
         }
 
-        /* --- 🔘 Theme Toggle Button (ลอยมุมซ้ายล่าง) --- */
+        /* 🔘 Floating Theme Toggle */
         .theme-toggle-btn {
             position: fixed; bottom: 18px; left: 18px;
-            width: 44px; height: 44px; border-radius: 50%;
+            width: 46px; height: 46px; border-radius: 50%;
             background: var(--bg-card); color: var(--text-main);
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--border-card);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            box-shadow: var(--shadow);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 1.25rem; z-index: 1000;
             transition: all 0.4s var(--ease-elastic);
             user-select: none;
         }
         .theme-toggle-btn:hover {
-            transform: scale(1.12) rotate(15deg);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+            transform: scale(1.15) rotate(15deg);
+            box-shadow: 0 10px 25px rgba(0, 122, 255, 0.3);
         }
-        .theme-toggle-btn:active {
-            transform: scale(0.92);
-        }
+        .theme-toggle-btn:active { transform: scale(0.9); }
 
         .layout-container {
-            display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px;
+            display: grid; grid-template-columns: 1fr 1.55fr; gap: 25px;
             max-width: 1100px; margin: 60px auto 0; align-items: start;
         }
 
+        /* 💧 Glass Card */
         .card {
             background: var(--bg-card); border-radius: var(--radius); padding: 25px;
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             box-shadow: var(--shadow); border: 1px solid var(--border-card);
             animation: slideUp 0.6s var(--ease-smooth);
-            transition: background-color 0.4s var(--ease-smooth), border-color 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth);
+            transition: background 0.4s var(--ease-smooth), border-color 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth), transform 0.3s var(--ease-smooth);
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .card h2 { margin-top: 0; color: var(--primary); font-weight: 600; font-size: 1.5rem; margin-bottom: 20px; }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: var(--text-main); font-weight: 500; }
-
-        /* --- 🎨 Modern Native Select --- */
-        .select-wrapper {
-            position: relative;
+        .card h2 { 
+            margin-top: 0; color: var(--text-main); font-weight: 700; font-size: 1.5rem; 
+            margin-bottom: 20px; letter-spacing: -0.5px;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.4);
         }
+        body.dark-mode .card h2 { text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; }
+
+        .native-hidden-select { display: none !important; }
+
+        /* 🧊 Liquid Glass Custom Dropdown */
+        .glass-select-container { position: relative; width: 100%; user-select: none; }
         
-        .select-wrapper::after {
-            content: '';
-            position: absolute;
-            top: 50%; right: 15px;
-            width: 10px; height: 10px;
-            border-right: 2px solid var(--text-muted);
-            border-bottom: 2px solid var(--text-muted);
-            transform: translateY(-70%) rotate(45deg);
-            pointer-events: none;
-            transition: all 0.3s;
+        .glass-select-trigger {
+            width: 100%; padding: 14px 18px;
+            border: 1px solid var(--input-border); border-radius: 16px;
+            font-size: 1rem; font-weight: 500; color: var(--text-main); background: var(--input-bg);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 2px 8px rgba(0,0,0,0.02);
+            cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.3s var(--ease-elastic);
         }
+        .glass-select-trigger:hover {
+            background: rgba(255, 255, 255, 0.45);
+            transform: translateY(-1px);
+        }
+        body.dark-mode .glass-select-trigger:hover { background: rgba(255, 255, 255, 0.12); }
         
-        .select-wrapper:focus-within::after {
-            transform: translateY(-20%) rotate(225deg);
+        .glass-select-container.open .glass-select-trigger {
             border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.01);
         }
-
-        .form-control {
-            width: 100%;
-            padding: 14px 15px;
-            border: 2px solid var(--input-border);
-            border-radius: 12px;
-            font-size: 1rem;
-            color: var(--text-main);
-            background-color: var(--input-bg);
-            
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            
-            cursor: pointer;
-            box-sizing: border-box; font-family: inherit;
-            transition: all 0.3s var(--ease-smooth);
-        }
-
-        .form-control:focus { 
-            outline: none;
-            border-color: var(--primary);
-            background-color: var(--bg-card);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
+        body.dark-mode .glass-select-container.open .glass-select-trigger {
+            background: rgba(15, 23, 42, 0.65);
         }
         
-        .form-control:disabled { 
-            background-color: rgba(148, 163, 184, 0.12); color: var(--text-muted); 
-            cursor: not-allowed; opacity: 0.6;
+        .glass-select-trigger.disabled {
+            opacity: 0.45; cursor: not-allowed; pointer-events: none;
         }
 
-        /* Animation ตอนช่องสีปลดล็อค */
-        .input-unlock-anim {
-            animation: unlockPop 0.6s var(--ease-elastic);
-            border-color: var(--primary) !important;
-            background-color: var(--bg-card) !important;
+        .glass-arrow {
+            width: 8px; height: 8px; border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted);
+            transform: rotate(45deg); transition: transform 0.35s var(--ease-elastic); margin-right: 2px;
         }
-        @keyframes unlockPop {
-            0% { transform: scale(1); }
-            40% { transform: scale(1.03); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
-            100% { transform: scale(1); }
+        .glass-select-container.open .glass-arrow {
+            transform: rotate(225deg) translateY(-2px); border-color: var(--primary);
         }
 
+        /* เมนูดรอปดาวน์ */
+        .glass-options-panel {
+            position: absolute; top: calc(100% + 8px); left: 0; width: 100%; max-height: 220px;
+            overflow-y: auto; z-index: 100;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.45) 100%);
+            backdrop-filter: blur(40px) saturate(220%); -webkit-backdrop-filter: blur(40px) saturate(220%);
+            border: 1.5px solid rgba(255, 255, 255, 0.9); border-radius: 18px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            opacity: 0; visibility: hidden; transform: translateY(-12px) scale(0.95);
+            transition: all 0.3s var(--ease-elastic);
+        }
+        body.dark-mode .glass-options-panel {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+        }
+        .glass-select-container.open .glass-options-panel {
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+        }
+        
+        .glass-option-item {
+            padding: 11px 15px; border-radius: 12px; font-size: 0.95rem; font-weight: 500;
+            color: var(--text-main); cursor: pointer; transition: all 0.2s var(--ease-smooth);
+        }
+        .glass-option-item:hover {
+            background: rgba(0, 122, 255, 0.15); color: var(--primary);
+            transform: translateX(4px);
+        }
+        .glass-option-item.selected {
+            background: var(--primary); color: #fff; font-weight: 600;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .glass-options-panel::-webkit-scrollbar { width: 5px; }
+        .glass-options-panel::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 10px; }
+        body.dark-mode .glass-options-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); }
+
+        /* Buttons */
         .button-group { margin-top: 25px; }
-        button { border: none; border-radius: 10px; padding: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--ease-elastic); font-family: inherit; }
-        .btn-primary { width: 100%; background: var(--primary); color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-3px) scale(1.02); }
-        .btn-primary:active { transform: scale(0.95); }
-
-        .loader {
-            padding: 10px; border-radius: 12px; 
-            background: var(--input-bg); color: var(--secondary);
-            font-size: 0.9rem; text-align: center; margin-bottom: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-            transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
-            border: 1px solid var(--border-card);
+        button { border: none; border-radius: 16px; padding: 15px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--ease-elastic); font-family: inherit; }
+        .btn-primary { 
+            width: 100%; background: var(--primary); color: white; 
+            box-shadow: 0 8px 24px var(--primary-glow); 
+            backdrop-filter: blur(10px);
         }
-        .loader.success { background: var(--success-bg); color: var(--success-text); border-color: rgba(34, 197, 94, 0.3); }
-        .loader.error { background: var(--error-bg); color: var(--error-text); border-color: rgba(239, 68, 68, 0.3); }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 30px var(--primary-glow);
+        }
+        .btn-primary:active { transform: scale(0.96); }
+
+        /* Loader */
+        .loader {
+            padding: 11px 16px; border-radius: 16px; 
+            background: var(--input-bg); color: var(--text-muted);
+            font-size: 0.9rem; text-align: center; margin-bottom: 18px;
+            display: flex; align-items: center; justify-content: center; gap: 14px;
+            transition: all 0.4s ease;
+            border: 1px solid var(--border-card);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        }
+        .loader.success { background: var(--success-bg); color: var(--success-text); border-color: rgba(34, 197, 94, 0.4); }
+        .loader.error { background: var(--error-bg); color: var(--error-text); border-color: rgba(239, 68, 68, 0.4); }
 
         .loader-content { display: flex; align-items: center; gap: 10px; transition: opacity 0.3s ease; opacity: 1; }
         .loader-content.fade-out { opacity: 0; }
@@ -219,85 +270,160 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .btn-refresh-modern {
-            width: 36px; height: 36px; border-radius: 50%; 
-            background: var(--bg-card); color: var(--primary);
-            border: 1px solid var(--border-card); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 32px; height: 32px; border-radius: 50%; 
+            background: var(--input-bg); color: var(--primary);
+            border: 1px solid var(--border-card); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.5s var(--ease-elastic);
+            backdrop-filter: blur(10px);
         }
-        .btn-refresh-modern:hover { transform: rotate(180deg) scale(1.1); color: var(--primary-dark); }
-        .refresh-icon-svg { width: 20px; height: 20px; fill: currentColor; }
+        .btn-refresh-modern:hover { transform: rotate(180deg) scale(1.12); color: var(--primary-dark); }
+        .refresh-icon-svg { width: 18px; height: 18px; fill: currentColor; }
 
+        /* 📦 Results Table Container */
         #result-container {
             display: flex; flex-direction: column; height: 60vh; 
-            overflow: hidden; border: 1px solid var(--border-card); border-radius: 10px;
+            overflow: hidden; border: 1px solid var(--border-card); border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.45);
             transition: all 0.3s;
+        }
+        body.dark-mode #result-container {
+            background: rgba(0, 0, 0, 0.22);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.12);
         }
 
         .summary-header { 
             background: var(--table-summary-bg); color: var(--primary); 
-            padding: 15px; font-weight: 600; border-bottom: 1px solid var(--table-summary-border); 
+            padding: 14px 18px; font-weight: 600; border-bottom: 1px solid var(--table-summary-border); 
             display: flex; justify-content: space-between; flex-shrink: 0; 
+            backdrop-filter: blur(15px);
         }
         .table-header { 
-            display: flex; background: var(--table-header-bg); border-bottom: 2px solid var(--border-card); 
-            padding: 10px 0; font-weight: 600; color: var(--text-muted); flex-shrink: 0; padding-right: 6px; 
+            display: flex; background: var(--table-header-bg); border-bottom: 1px solid var(--border-card); 
+            padding: 12px 0; font-weight: 600; color: var(--text-muted); flex-shrink: 0; padding-right: 6px; 
+            font-size: 0.9rem;
         }
-        .table-body { flex: 1; overflow-y: auto; overflow-x: hidden; background: var(--bg-card); scroll-behavior: smooth; }
-        .table-body::-webkit-scrollbar { width: 6px; }
+        .table-body { flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+        .table-body::-webkit-scrollbar { width: 5px; }
         .table-body::-webkit-scrollbar-track { background: var(--table-track); }
         .table-body::-webkit-scrollbar-thumb { background-color: var(--table-thumb); border-radius: 10px; }
 
         .flex-row { 
-            display: flex; padding: 12px 0; border-bottom: 1px solid var(--table-row-border); align-items: center; 
-            opacity: 0; transform: translateY(10px); animation: listEntry 0.4s var(--ease-smooth) forwards;
+            display: flex; padding: 13px 0; border-bottom: 1px solid var(--table-row-border); align-items: center; 
+            opacity: 0; transform: translateY(10px); animation: listEntry 0.4s var(--ease-elastic) forwards;
+            transition: background-color 0.2s, transform 0.2s;
         }
+        .flex-row:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(3px);
+        }
+        body.dark-mode .flex-row:hover { background-color: rgba(255, 255, 255, 0.08); }
         @keyframes listEntry { to { opacity: 1; transform: translateY(0); } }
 
-        .flex-col { padding: 0 15px; flex: 1; }
+        .flex-col { padding: 0 18px; flex: 1; }
         .flex-col.right { text-align: right; }
 
-        /* แถวไซส์ใหญ่พิเศษ (108 x 144 ขึ้นไป) */
         .highlight-row { background-color: var(--highlight-bg); }
-        .highlight-row .flex-col:first-child { border-left: 4px solid var(--highlight-border); padding-left: 11px; }
+        .highlight-row .flex-col:first-child { border-left: 4px solid var(--highlight-border); padding-left: 14px; }
 
-        /* แถวไซส์เล็ก (น้อยกว่า 84 x 96) */
         .small-row { background-color: var(--small-bg); }
-        .small-row .flex-col:first-child { border-left: 4px solid var(--small-border); padding-left: 11px; }
+        .small-row .flex-col:first-child { border-left: 4px solid var(--small-border); padding-left: 14px; }
 
-        /* ป้ายกำกับไซส์เล็ก */
         .badge-small {
-            font-size: 0.72rem;
-            font-weight: 500;
-            background: #ffedd5;
-            color: #c2410c;
-            padding: 2px 6px;
-            border-radius: 6px;
-            margin-left: 6px;
-            vertical-align: middle;
-        }
-        body.dark-mode .badge-small {
-            background: rgba(251, 146, 60, 0.2);
-            color: #fdba74;
+            font-size: 0.72rem; font-weight: 600; background: rgba(249, 115, 22, 0.25);
+            color: var(--small-border); padding: 3px 7px; border-radius: 7px;
+            margin-left: 6px; vertical-align: middle; border: 1px solid rgba(249, 115, 22, 0.35);
         }
 
-        .clickable-cell { cursor: pointer; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end; transition: transform 0.2s; }
-        .clickable-cell:hover { text-decoration: underline; transform: translateX(-3px); }
+        .clickable-cell { 
+            cursor: pointer; color: var(--primary); font-weight: 600; 
+            text-decoration: none; display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end; 
+            transition: all 0.25s var(--ease-elastic); 
+        }
+        .clickable-cell:hover { transform: translateX(-4px) scale(1.05); }
 
-        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1001; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        /* 📍 iOS Liquid Glass Modal (ถอดแบบ Dropdown รูป 2 พิกเซลต่อพิกเซล) */
+        .modal-backdrop { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.15); /* ปรับฉากหลังไม่ให้มืดทึบ เพื่อให้กระจกเบลอฉากหลังได้เนียน */
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0; 
+            transition: opacity 0.25s var(--ease-smooth); 
+        }
         .modal-backdrop.active { display: flex; opacity: 1; }
-        .modal-content { background: var(--bg-card); border: 1px solid var(--border-card); padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25); position: relative; transform: scale(0.8) translateY(20px); opacity: 0; transition: all 0.4s var(--ease-elastic); }
+        
+        .modal-content { 
+            /* ไล่เฉดขาวสว่างด้านบน ลงมาโปร่งใสล่าง แบบเดียวกับ Dropdown Panel */
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.45) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.9); 
+            padding: 24px 20px 20px; 
+            border-radius: 28px; 
+            width: 90%; 
+            max-width: 380px; 
+            text-align: center; 
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.15), 
+                        inset 0 1.5px 1px 0 rgba(255, 255, 255, 1); 
+            position: relative; 
+            transform: scale(0.9) translateY(12px); 
+            opacity: 0; 
+            transition: all 0.35s var(--ease-elastic); 
+            backdrop-filter: blur(35px) saturate(210%); 
+            -webkit-backdrop-filter: blur(35px) saturate(210%);
+        }
+        body.dark-mode .modal-content {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+        }
         .modal-backdrop.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
-        .modal-close:hover { color: var(--error-text); }
 
-        .disabled { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); transition: 0.3s; }
+        .modal-close { 
+            position: absolute; top: 14px; right: 16px; font-size: 18px; 
+            cursor: pointer; color: var(--text-muted); 
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: all 0.2s;
+        }
+        .modal-close:hover { background: rgba(0,0,0,0.06); color: var(--text-main); }
+        body.dark-mode .modal-close:hover { background: rgba(255,255,255,0.1); }
+
+        /* 🌟 แคปซูลสีฟ้านีออน ถอดแบบแถบเลข 5 จากรูปที่ 2 */
+        .modal-pill-highlight {
+            background: #007aff;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin: 14px 0 4px;
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #modalLocationData {
+            font-size: 1.3rem; 
+            font-weight: 700; 
+            color: #ffffff;
+            letter-spacing: 0.5px; 
+            word-break: break-all; 
+            line-height: 1.3;
+        }
+
+        .disabled { opacity: 0.45; pointer-events: none; filter: grayscale(0.4); transition: 0.3s; }
 
         @media (max-width: 768px) {
-            body { height: auto; overflow: auto; padding: 10px; }
+            body { height: auto; overflow: auto; padding: 12px; }
             .layout-container { display: block; margin-top: 50px; }
             .card { margin-bottom: 20px; }
-            .logo { width: 70px; top: 10px; right: 10px; }
+            .logo { width: 70px; top: 12px; right: 12px; }
             #result-container { height: 50vh; } 
             .version-tag { display: none; }
             .theme-toggle-btn { bottom: 12px; left: 12px; width: 40px; height: 40px; font-size: 1.1rem; }
@@ -307,9 +433,8 @@
 <body>
 
     <img src="https://img2.pic.in.th/pic/images-removebg-preview6f60794d15581bfe.png" alt="Company Logo" class="logo">
-    <div class="version-tag">v1.0</div>
+    <div class="version-tag">Liquid Glass Edition</div>
 
-    <!-- ปุ่มสลับโหมดมุมซ้ายล่าง -->
     <button id="themeToggle" class="theme-toggle-btn" onclick="toggleTheme()" title="สลับโหมดมืด / โหมดสว่าง">
         🌙
     </button>
@@ -326,21 +451,35 @@
             </div>
 
             <div id="form-wrapper" class="disabled">
+                <!-- Select ความหนา -->
                 <div class="form-group">
                     <label>ความหนา</label>
-                    <div class="select-wrapper">
-                        <select id="thicknessInput" class="form-control" onchange="updateColorOptions()">
-                            <option value="">-- รอข้อมูล --</option>
-                        </select>
+                    <select id="thicknessInput" class="native-hidden-select" onchange="updateColorOptions()">
+                        <option value="">-- รอข้อมูล --</option>
+                    </select>
+                    
+                    <div id="thicknessCustom" class="glass-select-container">
+                        <div class="glass-select-trigger" onclick="toggleCustomDropdown('thicknessCustom')">
+                            <span class="glass-selected-text">-- รอข้อมูล --</span>
+                            <span class="glass-arrow"></span>
+                        </div>
+                        <div class="glass-options-panel"></div>
                     </div>
                 </div>
 
+                <!-- Select สี -->
                 <div class="form-group">
                     <label>สี</label>
-                    <div class="select-wrapper">
-                        <select id="colorInput" class="form-control" disabled>
-                            <option value="">-- เลือกความหนาก่อน --</option>
-                        </select>
+                    <select id="colorInput" class="native-hidden-select" disabled>
+                        <option value="">-- เลือกความหนาก่อน --</option>
+                    </select>
+                    
+                    <div id="colorCustom" class="glass-select-container">
+                        <div class="glass-select-trigger disabled" onclick="toggleCustomDropdown('colorCustom')">
+                            <span class="glass-selected-text">-- เลือกความหนาก่อน --</span>
+                            <span class="glass-arrow"></span>
+                        </div>
+                        <div class="glass-options-panel"></div>
                     </div>
                 </div>
 
@@ -363,12 +502,15 @@
         </div>
     </div>
 
+    <!-- Modal ตัวใหม่ ถอดแบบ Liquid Glass ตามรูปที่ 2 คลีนตา ไร้กรอบทับ -->
     <div id="locationModal" class="modal-backdrop" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="closeModal()">&times;</span>
-            <h3 style="margin-top: 0; color: var(--text-muted);">📍 ตำแหน่งเก็บ</h3>
-            <div id="modalLocationData" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 20px 0;">
-                Loading...
+            <div style="font-size: 1rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                📍 <span>ตำแหน่งเก็บ</span>
+            </div>
+            <div class="modal-pill-highlight">
+                <div id="modalLocationData">Loading...</div>
             </div>
         </div>
     </div>
@@ -379,7 +521,6 @@
 
         let excelDataCache = null;
 
-        // --- 🌓 ฟังก์ชันจัดการ Dark Mode ---
         function initTheme() {
             const savedTheme = localStorage.getItem('ksg_theme');
             const themeBtn = document.getElementById('themeToggle');
@@ -409,6 +550,55 @@
             loadData();
         };
 
+        function toggleCustomDropdown(containerId) {
+            const target = document.getElementById(containerId);
+            const isOpen = target.classList.contains('open');
+            closeAllCustomDropdowns();
+            if (!isOpen) target.classList.add('open');
+        }
+
+        function closeAllCustomDropdowns() {
+            document.querySelectorAll('.glass-select-container').forEach(el => el.classList.remove('open'));
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.glass-select-container')) {
+                closeAllCustomDropdowns();
+            }
+        });
+
+        function syncCustomDropdownUI(selectId, customContainerId) {
+            const select = document.getElementById(selectId);
+            const container = document.getElementById(customContainerId);
+            const trigger = container.querySelector('.glass-select-trigger');
+            const selectedText = container.querySelector('.glass-selected-text');
+            const panel = container.querySelector('.glass-options-panel');
+
+            if (select.disabled) {
+                trigger.classList.add('disabled');
+            } else {
+                trigger.classList.remove('disabled');
+            }
+
+            const currentOption = select.options[select.selectedIndex];
+            selectedText.textContent = currentOption ? currentOption.text : '-- เลือก --';
+
+            panel.innerHTML = '';
+            Array.from(select.options).forEach((opt) => {
+                const item = document.createElement('div');
+                item.className = `glass-option-item ${opt.value === select.value ? 'selected' : ''}`;
+                item.textContent = opt.text;
+                item.onclick = function(e) {
+                    e.stopPropagation();
+                    select.value = opt.value;
+                    select.dispatchEvent(new Event('change'));
+                    closeAllCustomDropdowns();
+                    syncCustomDropdownUI(selectId, customContainerId);
+                };
+                panel.appendChild(item);
+            });
+        }
+
         function updateLoaderState(state, htmlContent) {
             const loader = document.getElementById('loader-status');
             const contentWrapper = document.getElementById('loader-content-wrapper');
@@ -432,9 +622,11 @@
                     const updateTime = (excelDataCache.length > 0 && excelDataCache[0]['Update']) ? excelDataCache[0]['Update'] : '-';
                     
                     populateDropdown('thicknessInput', excelDataCache, 'ความหนา', true);
+                    syncCustomDropdownUI('thicknessInput', 'thicknessCustom');
                     
                     document.getElementById('colorInput').innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>';
                     document.getElementById('colorInput').disabled = true;
+                    syncCustomDropdownUI('colorInput', 'colorCustom');
 
                     updateLoaderState('success', `
                         <span>✅ ข้อมูลล่าสุด: <b>${updateTime}</b></span>
@@ -481,7 +673,7 @@
             if(!thk) { 
                 colSel.disabled = true; 
                 colSel.innerHTML = '<option value="">-- เลือกความหนาก่อน --</option>'; 
-                colSel.classList.remove('input-unlock-anim');
+                syncCustomDropdownUI('colorInput', 'colorCustom');
                 return; 
             }
 
@@ -489,9 +681,7 @@
             populateDropdown('colorInput', filtered, 'สี', false);
             
             colSel.disabled = false;
-            colSel.classList.remove('input-unlock-anim');
-            void colSel.offsetWidth; 
-            colSel.classList.add('input-unlock-anim');
+            syncCustomDropdownUI('colorInput', 'colorCustom');
         }
 
         function findAllMatches() {
@@ -550,7 +740,7 @@
                     qtyDisplay = `<span style="color: var(--error-text); font-weight: bold;">${qty}</span>`;
                 }
 
-                const delay = index * 0.05; 
+                const delay = index * 0.04; 
 
                 bodyHTML += `
                     <div class="flex-row ${rowClass}" style="animation-delay: ${delay}s;">
